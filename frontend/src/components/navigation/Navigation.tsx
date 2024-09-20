@@ -8,8 +8,13 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
+import { useState } from "react";
 
 const Navigation = () => {
+  const [dropDown, setDropDown] = useState(false);
+  const user = false;
+
   return (
     <nav className="header__navigation container">
       <Link to="/">
@@ -17,28 +22,31 @@ const Navigation = () => {
       </Link>
       <ul>
         <li>
-          <Link to="/Home" data-text="Home">
+          <Link to="/" data-text="Home">
             <HomeIcon />
           </Link>
         </li>
         <li>
-          <Link to="/" data-text="Favorite">
+          <Link to="/profile/favorite" data-text="Favorite">
             <FavoriteBorderOutlinedIcon />
           </Link>
         </li>
         <li>
-          <Link to="/" data-text="Basket">
+          <Link to="/profile/basket" data-text="Basket">
             <ShoppingCartOutlinedIcon />
           </Link>
         </li>
-        <li className="header__navigation-profile">
-          <DropDown
-            items={[
-              { label: "Profile", icon: <AccountBoxIcon /> },
-              { label: "Logout", icon: <LogoutIcon /> },
-            ]}
-          />{" "}
-          <img src="" alt="userPic" />
+        <li className="header__navigation-profile" onClick={() => setDropDown(!dropDown)}>
+          {dropDown && (
+            <DropDown
+              items={[
+                { label: "Profile", icon: <AccountBoxIcon />, href: "profile" },
+                { label: "Logout", icon: <LogoutIcon />, href: "auth" },
+              ]}
+            />
+          )}
+
+          {user ? <img src="" alt="avatar" /> : <AssignmentIndOutlinedIcon />}
         </li>
       </ul>
     </nav>

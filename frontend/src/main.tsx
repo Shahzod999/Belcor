@@ -5,12 +5,15 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.scss";
 import Error from "./components/Error.tsx";
-import Home from "./pages/Home.tsx";
 import Admin from "./pages/Admin/Admin.tsx";
 import Auth from "./pages/Auth/Auth.tsx";
 import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
 import Profile from "./pages/User/Profile.tsx";
+import Home from "./pages/home/Home.tsx";
+import PrivateRoute from "./components/PrivateRoute.tsx";
+import Favorite from "./pages/User/Favorite/Favorite.tsx";
+import Basket from "./pages/User/Basket/Basket.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +22,7 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: "/home",
+        path: "",
         element: <Home />,
       },
       {
@@ -32,7 +35,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: "",
+            element: <Profile />,
+          },
+          {
+            path: "favorite",
+            element: <Favorite />,
+          },
+          {
+            path: "basket",
+            element: <Basket />,
+          },
+        ],
       },
     ],
   },
