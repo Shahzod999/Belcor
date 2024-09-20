@@ -1,0 +1,40 @@
+.header__navigation {
+  background-color: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20%;
+
+  > ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // gap: 40px;
+    padding: 10px 0;
+
+    li {
+      padding: 10px 5px;
+      position: relative;
+      cursor: pointer;
+
+      a {
+        display: flex;
+        align-items: center;
+        &::before {
+          content: attr(data-text);
+          opacity: 0;
+          transform: translateX(100%);
+          transition: 0.5s ease;
+        }
+        &:hover::before {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    }
+  }
+  &-profile {
+    margin-left: 40px;
+  }
+}
