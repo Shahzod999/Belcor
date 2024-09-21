@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE__URL } from "../constants";
-import { Product } from "../types/types";
+import { Product } from "../types/ProductTypes";
 
 interface ProductsResponse {
   products: Product[];

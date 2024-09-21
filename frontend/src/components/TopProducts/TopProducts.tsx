@@ -7,9 +7,6 @@ import "swiper/css/pagination";
 import "swiper/css/effect-cube";
 import "./topProducts.scss";
 
-// import { Pagination } from "swiper/modules";
-import ProductBox from "../productBox/ProductBox";
-
 import { EffectCube, Pagination } from "swiper/modules";
 
 const TopProducts = () => {
