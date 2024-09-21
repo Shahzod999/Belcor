@@ -14,11 +14,12 @@ const userInfoSlice = createSlice({
   initialState,
   reducers: {
     userInfoHolder: (state, action) => {
-      state.userInfo = "Nice"
+      state.userInfo = action.payload
+      localStorage.setItem("userInfo", JSON.stringify(action.payload))
     }
   }
 })
 
 export const { userInfoHolder } = userInfoSlice.actions
-export const selectedUserInfo = (state: RootState) => state.userInfo
+export const selectedUserInfo = (state: RootState) => state.userInfo.userInfo
 export default userInfoSlice.reducer

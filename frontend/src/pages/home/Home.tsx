@@ -1,3 +1,4 @@
+import { Box, Container } from "@mui/material";
 import { useGetAllProductsQuery } from "../../app/api/dataFromDummy";
 import { selectedUserInfo } from "../../app/features/userInfoSlice";
 import { useAppSelector } from "../../app/hooks";
@@ -23,14 +24,16 @@ const Home = () => {
   }
 
   return (
-    <div className="container">
+    <Container>
       <TopProducts />
       <div className="totalProduct">
         {data?.products.map((product) => (
-          <ProductBox product={product} />
+          <Box sx={{ maxWidth: "30%" }} key={product.id}>
+            <ProductBox product={product} />
+          </Box>
         ))}
       </div>
-    </div>
+    </Container>
   );
 };
 

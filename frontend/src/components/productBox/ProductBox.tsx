@@ -8,7 +8,7 @@ import { Product } from "../../app/types/types";
 
 const ProductBox = ({ product }: { product: Product }) => {
   return (
-    <Card sx={{ maxWidth: 345, boxShadow: "0 0 20px 10px black" }}>
+    <Card sx={{ boxShadow: "0 0 20px 10px black" }}>
       <CardMedia sx={{ height: 140, backgroundSize: "contain", backgroundPosition: "center" }} image={product.thumbnail} title="Product Thumbnail" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">

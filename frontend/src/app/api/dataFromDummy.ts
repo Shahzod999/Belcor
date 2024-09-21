@@ -17,7 +17,7 @@ export const productsApi = createApi({
       query: ({ limit, skip = 0 }) => `/products?limit=${limit}&skip=${skip}`
     }),
     getHightRaiting: builder.query<ProductsResponse, void>({
-      query: () => '/products?limit=4&sortBy=rating&order=desc'
+      query: () => '/products?limit=11&sortBy=rating&order=desc'
     }),
   }),
 })

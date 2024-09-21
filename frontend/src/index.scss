@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Montserrat Alternates", sans-serif;
+  font-family: "Montserrat Alternates", sans-serif !important;
 }
 li {
   list-style: none;
@@ -13,9 +13,6 @@ a {
   color: inherit;
 }
 
-.container {
-  padding: 0 150px;
-}
 body {
   background-color: rgb(32 32 32);
 }
