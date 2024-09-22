@@ -1,8 +1,4 @@
-import { useGetProfileUserQuery } from "../../app/api/userApi";
-
 const Profile = () => {
-  // const { data, error, isLoading } = useGetProfileUserQuery();
-  
 
   return (
     <div>

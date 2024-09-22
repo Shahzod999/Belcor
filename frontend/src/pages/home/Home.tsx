@@ -1,38 +1,29 @@
-import { Box, Container } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { useGetAllProductsQuery } from "../../app/api/dataFromDummy";
-import { selectedUserInfo } from "../../app/features/userInfoSlice";
-import { useAppSelector } from "../../app/hooks";
 import Error from "../../components/Error";
 import Loader from "../../components/Loader";
 import TopProducts from "../../components/TopProducts/TopProducts";
-import ProductBox from "../../components/productBox/ProductBox";
-import "./home.scss";
+import ProductCard from "../../components/productBox/ProductCard";
 
 const Home = () => {
   const { data, error, isLoading } = useGetAllProductsQuery({ limit: 60, skip: 0 });
 
-  const user = useAppSelector(selectedUserInfo);
-
-  console.log(data, "asd");
-
   if (error) {
     return <Error />;
   }
-
   if (isLoading) {
     return <Loader />;
   }
-
   return (
     <Container>
       <TopProducts />
-      <div className="totalProduct">
+      <Grid container spacing={2} sx={{ marginTop: "70px" }}>
         {data?.products.map((product) => (
-          <Box sx={{ maxWidth: "30%" }} key={product.id}>
-            <ProductBox product={product} />
-          </Box>
+          <Grid item key={product.id} xs={12} sm={6} md={4}>
+            <ProductCard product={product} viewMode="grid" />
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </Container>
   );
 };

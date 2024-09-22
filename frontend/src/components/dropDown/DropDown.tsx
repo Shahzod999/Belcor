@@ -17,12 +17,13 @@ const DropDown = ({ items }: DropDownProps) => {
           <li key={index}>
             {item.href ? (
               <Link to={item.href}>
-                {item.icon}
-                {item.label}
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
               </Link>
             ) : (
               <>
-                {item.icon} {item.label}
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
               </>
             )}
           </li>

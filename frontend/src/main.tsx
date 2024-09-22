@@ -14,6 +14,7 @@ import Home from "./pages/home/Home.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import Favorite from "./pages/User/Favorite/Favorite.tsx";
 import Basket from "./pages/User/Basket/Basket.tsx";
+import SingleProduct from "./components/productBox/SingleProduct.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,11 +27,15 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/admin",
-        element: <Admin />,
+        path: "/:id",
+        element: <SingleProduct />,
       },
       {
         path: "/auth",
+        element: <Auth />,
+      },
+      {
+        path: "/logOut",
         element: <Auth />,
       },
       {
@@ -48,6 +53,10 @@ const router = createBrowserRouter([
           {
             path: "basket",
             element: <Basket />,
+          },
+          {
+            path: "admin",
+            element: <Admin />,
           },
         ],
       },

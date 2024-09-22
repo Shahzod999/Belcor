@@ -1,8 +1,17 @@
 import { Navigate, Outlet } from "react-router";
+import { useAppSelector } from "../app/hooks";
+import { selectedUserInfo } from "../app/features/userInfoSlice";
+import { Container } from "@mui/material";
 
 const PrivateRoute = () => {
-  const userInfo = true;
-  return userInfo ? <Outlet /> : <Navigate to="/auth" replace />;
+  const userInfo = useAppSelector(selectedUserInfo);
+  return userInfo ? (
+    <Container>
+      <Outlet />
+    </Container>
+  ) : (
+    <Navigate to="/auth" replace />
+  );
 };
-//мы тут
+//пауза тут
 export default PrivateRoute;

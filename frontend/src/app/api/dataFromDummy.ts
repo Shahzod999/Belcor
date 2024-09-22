@@ -1,13 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE__URL } from "../constants";
-import { Product } from "../types/ProductTypes";
+import { Product, ProductsResponse } from "../types/ProductTypes";
 
-interface ProductsResponse {
-  products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
-}
 
 export const productsApi = createApi({
   reducerPath: "products",
@@ -19,7 +13,10 @@ export const productsApi = createApi({
     getHightRaiting: builder.query<ProductsResponse, void>({
       query: () => '/products?limit=11&sortBy=rating&order=desc'
     }),
+    getSingleProduct: builder.query<Product, { id: string | undefined }>({
+      query: ({ id }) => `/products/${id}`
+    })
   }),
 })
 
-export const { useGetAllProductsQuery, useGetHightRaitingQuery } = productsApi
+export const { useGetAllProductsQuery, useGetHightRaitingQuery, useGetSingleProductQuery } = productsApi

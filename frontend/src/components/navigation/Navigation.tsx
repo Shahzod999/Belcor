@@ -10,11 +10,16 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import { useState } from "react";
-import { AppBar, Box, Container } from "@mui/material";
+import { AppBar, Container } from "@mui/material";
+import { useAppSelector } from "../../app/hooks";
+import { selectedUserInfo } from "../../app/features/userInfoSlice";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const Navigation = () => {
+  const userInfo = useAppSelector(selectedUserInfo);
   const [dropDown, setDropDown] = useState(false);
   const user = false;
+  console.log(userInfo?.isAdmin);
 
   return (
     <AppBar sx={{ backgroundColor: "#141414" }}>
@@ -39,12 +44,20 @@ const Navigation = () => {
                 <ShoppingCartOutlinedIcon />
               </Link>
             </li>
+            {userInfo?.isAdmin && (
+              <li>
+                <Link to="/profile/admin" data-text="Basket">
+                  <AdminPanelSettingsIcon />
+                </Link>
+              </li>
+            )}
+
             <li className="header__navigation-profile" onClick={() => setDropDown(!dropDown)}>
               {dropDown && (
                 <DropDown
                   items={[
-                    { label: "Profile", icon: <AccountBoxIcon />, href: "profile" },
-                    { label: "Logout", icon: <LogoutIcon />, href: "auth" },
+                    { label: `${userInfo?.username ? userInfo?.username : "Profile"}`, icon: <AccountBoxIcon />, href: "profile" },
+                    { label: `${userInfo?.username ? "Log Out" : "Log In"}`, icon: <LogoutIcon />, href: "logOut" },
                   ]}
                 />
               )}

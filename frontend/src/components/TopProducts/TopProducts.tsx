@@ -7,7 +7,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-cube";
 import "./topProducts.scss";
 
-import { EffectCube, Pagination } from "swiper/modules";
+import { Autoplay, EffectCube, Pagination } from "swiper/modules";
 
 const TopProducts = () => {
   const { data, isError, isLoading } = useGetHightRaitingQuery();
@@ -36,7 +36,15 @@ const TopProducts = () => {
           shadowOffset: 20,
           shadowScale: 0.94,
         }}
-        modules={[EffectCube, Pagination]}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        loop={true}
+        modules={[Autoplay, EffectCube, Pagination]}
         className="mySwiper">
         {data?.products.map((product) => (
           <SwiperSlide key={product.id}>

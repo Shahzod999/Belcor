@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
 import "./auth.scss";
-import { useLoginUserMutation, useRegisterUserMutation } from "../../app/api/userApi";
+import { useLogOutUserMutation, useLoginUserMutation, useRegisterUserMutation } from "../../app/api/userApi";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectedUserInfo, userInfoHolder } from "../../app/features/userInfoSlice";
-import { useNavigate } from "react-router-dom";
+import { logout, selectedUserInfo, userInfoHolder } from "../../app/features/userInfoSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type Inputs = {
   username: string;
@@ -33,6 +33,7 @@ const Auth = () => {
   } = useForm<Inputs>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const userInfo = useAppSelector(selectedUserInfo);
   const [newUser, setNewUser] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -40,6 +41,7 @@ const Auth = () => {
 
   const [registerUser, { isLoading: isRegisterLoading, isError: isRegisterError, error: registerError }] = useRegisterUserMutation();
   const [loginUser, { isLoading: isLoginLoading, isError: isLoginError, error: loginError }] = useLoginUserMutation();
+  const [logOutUser] = useLogOutUserMutation();
   const [commonError, setCommonError] = useState("");
 
   const onSubmit = (data: Inputs) => {
@@ -71,6 +73,20 @@ const Auth = () => {
       setCommonError((loginError as AuthStateError)?.data);
     }
   };
+
+  const logOuthandler = async () => {
+    try {
+      await logOutUser().unwrap();
+      dispatch(logout());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    if (pathname == "/logOut") {
+      logOuthandler();
+    }
+  }, [pathname]);
 
   return (
     <div className="auth">

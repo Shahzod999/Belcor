@@ -7,7 +7,7 @@ interface userInfoState {
 }
 
 const initialState: userInfoState = {
-  userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo") as string) as UserState : null
+  userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo") as string) : null
 }
 
 const userInfoSlice = createSlice({
@@ -25,6 +25,6 @@ const userInfoSlice = createSlice({
   }
 })
 
-export const { userInfoHolder } = userInfoSlice.actions
+export const { userInfoHolder, logout } = userInfoSlice.actions
 export const selectedUserInfo = (state: RootState) => state.userInfo.userInfo
 export default userInfoSlice.reducer
