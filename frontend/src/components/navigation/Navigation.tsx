@@ -19,7 +19,6 @@ const Navigation = () => {
   const userInfo = useAppSelector(selectedUserInfo);
   const [dropDown, setDropDown] = useState(false);
   const user = false;
-  console.log(userInfo?.isAdmin);
 
   return (
     <AppBar sx={{ backgroundColor: "#141414" }}>

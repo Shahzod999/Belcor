@@ -1,14 +1,19 @@
-import { Box, Card, CardContent, CardMedia, Typography, Button, Grid, Rating, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Typography, Button, Grid, Rating, List, ListItem, ListItemText, Divider, IconButton } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { addProductToFavorite, removeProductFromFavorite, selectedFavorite } from "../../app/features/favoriteSlice";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { addProductToBasket, selectedBasket } from "../../app/features/bascketSlice";
+import { useState } from "react";
 
 type ProductCardProps = {
   product: any;
-  viewMode?: "single" | "grid";
+  viewMode?: "single" | "grid" | "basket";
 };
 export interface ReviewState {
   rating: number;
@@ -21,8 +26,10 @@ export interface ReviewState {
 const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
   const dispatch = useAppDispatch();
   const favorites = useAppSelector(selectedFavorite);
+  const basket = useAppSelector(selectedBasket);
 
   const isFavorite = favorites.some((favProd: any) => favProd.id === product.id);
+  const quantityAdded = basket.find((basketProd: any) => basketProd.id === product.id);
 
   const toggleFavorite = () => {
     if (isFavorite) {
@@ -32,6 +39,22 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
     }
   };
   //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
+  const [quantity, setQuantity] = useState(quantityAdded?.quantity || 1);
+
+  const handleQuantity = (method: string) => {
+    switch (method) {
+      case "+":
+        setQuantity((prev) => prev + 1);
+        break;
+      case "-":
+        setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+        break;
+    }
+  };
+
+  const handleAddToBasket = () => {
+    dispatch(addProductToBasket({ ...product, quantity }));
+  };
 
   return (
     <Card
@@ -50,7 +73,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
 
       <Grid container>
         {/* Изображение продукта */}
-        <Grid md={viewMode === "single" ? 6 : 12}>
+        <Grid item md={viewMode === "single" ? 6 : 12}>
           <CardMedia
             component="img"
             image={product.thumbnail}
@@ -65,7 +88,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
         </Grid>
 
         {/* Описание продукта */}
-        <Grid md={viewMode === "single" ? 6 : 12}>
+        <Grid item md={viewMode === "single" ? 6 : 12}>
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
               {product.title}
@@ -81,6 +104,12 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
             <Typography variant="h6" color="primary" sx={{ fontWeight: "bold", mb: 2 }}>
               Price: ${product.price}
             </Typography>
+            {(viewMode === "single" || viewMode === "basket") && (
+              <Typography color="secondary" sx={{ fontWeight: "bold", mb: 2 }}>
+                Total Price: ${(product.price * quantity).toFixed(2)} x {quantity}
+              </Typography>
+            )}
+
             <Rating value={product.rating} readOnly precision={0.1} />
 
             {/* Дополнительная информация только для страницы одного продукта */}
@@ -102,14 +131,45 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
                   <Typography variant="body2">Return Policy: {product.returnPolicy}</Typography>
                 </Box>
 
-                <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-                  Add to Cart
+                <Box display="flex" alignItems="center" mt={2}>
+                  <Typography variant="body2" sx={{ mr: 2 }}>
+                    Quantity:
+                  </Typography>
+                  <IconButton onClick={() => handleQuantity("-")} disabled={quantity <= 1}>
+                    <RemoveIcon />
+                  </IconButton>
+                  <Typography variant="body2" sx={{ mx: 2 }}>
+                    {quantity}
+                  </Typography>
+                  <IconButton onClick={() => handleQuantity("+")}>
+                    <AddIcon />
+                  </IconButton>
+                </Box>
+
+                <Button onClick={handleAddToBasket} variant="contained" color="primary" sx={{ mt: 2 }}>
+                  Add to Basket
                 </Button>
               </>
             )}
+            {viewMode === "basket" && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  padding: 2,
+                  backgroundColor: "primary.main",
+                  borderRadius: 1,
+                  boxShadow: 3,
+                  display: "flex",
+                  alignItems: "center",
+                }}>
+                <Typography sx={{ color: "white", fontSize: "13px" }}>Items in Basket: {quantityAdded?.quantity || 0}</Typography>
+              </Box>
+            )}
 
             {/* Ссылка на продукт в режиме "grid" */}
-            {viewMode === "grid" && (
+            {(viewMode === "grid" || viewMode === "basket") && (
               <Button component={Link} to={`/${product.id}`} variant="contained" color="primary" sx={{ mt: 2 }}>
                 View Details
               </Button>

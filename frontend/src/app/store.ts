@@ -4,11 +4,13 @@ import userInfoSlice from "./features/userInfoSlice";
 import { productsApi } from "./api/dataFromDummy";
 import { userApi } from "./api/userApi";
 import favoriteSlice from "./features/favoriteSlice";
+import bascketSlice from "./features/bascketSlice";
 
 export const store = configureStore({
   reducer: {
     userInfo: userInfoSlice,
     favorite: favoriteSlice,
+    basket: bascketSlice,
     [productsApi.reducerPath]: productsApi.reducer,
     [userApi.reducerPath]: userApi.reducer
   },

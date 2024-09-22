@@ -8,8 +8,6 @@ import ProductCard from "./ProductCard";
 const SingleProduct = () => {
   const { id } = useParams();
   const { data, error, isLoading } = useGetSingleProductQuery({ id });
-  console.log(data);
-  console.log(id);
 
   if (error) {
     return <Error />;
