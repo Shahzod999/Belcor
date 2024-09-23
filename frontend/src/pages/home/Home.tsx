@@ -8,22 +8,24 @@ import { useState } from "react";
 
 const Home = () => {
   const { data: categoryList } = useGetAllCategoryListQuery();
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [priceOrder, setPriceOrder] = useState("");
-  const [nameOrder, setNameOrder] = useState("");
+  const [filters, setFilters] = useState({
+    category: "",
+    price: "",
+    name: "",
+  });
 
-  const { data, error, isLoading } = useGetAllProductsQuery({ limit: 60, skip: 0, filter: selectedCategory });
+  const { data, error, isLoading } = useGetAllProductsQuery({
+    limit: 60,
+    skip: 0,
+    filter: filters.category ? `/category/${filters.category}` : "",
+    sort: filters.price || filters.name ? `&sortBy=${filters.price ? "price" : "title"}&order=${filters.price || filters.name}` : "",
+  });
 
-  const handleCategoryChange = (event: SelectChangeEvent<string>) => {
-    setSelectedCategory(`/category/${event.target.value}`);
-  };
-
-  const handlePriceChange = (event: SelectChangeEvent<string>) => {
-    setPriceOrder(event.target.value);
-  };
-
-  const handleNameChange = (event: SelectChangeEvent<string>) => {
-    setNameOrder(event.target.value);
+  const handleFilterChange = (type: string) => (event: SelectChangeEvent<string>) => {
+    setFilters({
+      ...filters,
+      [type]: event.target.value,
+    });
   };
 
   if (error) {
@@ -32,15 +34,15 @@ const Home = () => {
   if (isLoading) {
     return <Loader />;
   }
+
   return (
     <Container>
       <TopProducts />
 
-      {/*  */}
       <Box sx={{ display: "flex", gap: 2, mt: 4, color: "white", bgcolor: "#171717", borderRadius: 1, p: 1 }}>
         <FormControl variant="outlined" sx={{ minWidth: 120, border: "0.5px solid gray", borderRadius: 1, color: "white" }}>
           <InputLabel sx={{ color: "white" }}> Категория</InputLabel>
-          <Select value={selectedCategory} onChange={handleCategoryChange} label="Категория" sx={{ color: "white" }}>
+          <Select value={filters.category} onChange={handleFilterChange("category")} label="Категория" sx={{ color: "white" }}>
             <MenuItem value="">
               <em>All</em>
             </MenuItem>
@@ -54,7 +56,7 @@ const Home = () => {
 
         <FormControl variant="outlined" sx={{ minWidth: 120, border: "0.5px solid gray", borderRadius: 1, color: "white" }}>
           <InputLabel sx={{ color: "white" }}>Price</InputLabel>
-          <Select value={priceOrder} onChange={handlePriceChange} label="Цена" sx={{ color: "white" }}>
+          <Select value={filters.price} onChange={handleFilterChange("price")} label="Цена" sx={{ color: "white" }}>
             <MenuItem value="">
               <em>No filter</em>
             </MenuItem>
@@ -65,7 +67,7 @@ const Home = () => {
 
         <FormControl variant="outlined" sx={{ minWidth: 120, border: "0.5px solid gray", borderRadius: 1, color: "white" }}>
           <InputLabel sx={{ color: "white" }}>Name</InputLabel>
-          <Select value={nameOrder} onChange={handleNameChange} label="Название" sx={{ color: "white" }}>
+          <Select value={filters.name} onChange={handleFilterChange("name")} label="Название" sx={{ color: "white" }}>
             <MenuItem value="">
               <em>No filter</em>
             </MenuItem>
@@ -74,8 +76,7 @@ const Home = () => {
           </Select>
         </FormControl>
       </Box>
-
-      {/*  */}
+      {/* пауза тут */}
 
       <Grid container spacing={2} mt={1}>
         {data?.products.map((product) => (

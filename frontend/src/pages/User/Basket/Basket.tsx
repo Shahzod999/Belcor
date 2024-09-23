@@ -1,11 +1,15 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
 import ProductCard from "../../../components/productBox/ProductCard";
-import { useAppSelector } from "../../../app/hooks";
-import { selectedBasket } from "../../../app/features/bascketSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { addToTotalOrderForWaiting, selectedBasket, selectedWaitingOrderList } from "../../../app/features/bascketSlice";
 import { ChangeEvent, useState } from "react";
+import { useGetProfileUserQuery } from "../../../app/api/userApi";
 
 const Basket = () => {
+  const dispatch = useAppDispatch();
   const basket = useAppSelector(selectedBasket);
+  const waitingOrderList = useAppSelector(selectedWaitingOrderList);
+  const { data } = useGetProfileUserQuery();
   const [open, setOpen] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
   const totalprice = basket.reduce((acc, curr) => acc + Number(curr.price) * Number(curr.quantity), 0);
@@ -21,6 +25,7 @@ const Basket = () => {
     console.log("Order Confirmed!");
     console.log("Card Number:", cardNumber);
     setOpen(false);
+    dispatch(addToTotalOrderForWaiting({ basket, totalprice, cardNumber }));
   };
 
   const handleCardNumber = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +38,9 @@ const Basket = () => {
     setCardNumber(number);
   };
 
+  console.log(waitingOrderList, "11221543298875");
+  console.log(data);
+
   return (
     <>
       <Grid container spacing={2} sx={{ marginTop: "70px" }}>
@@ -41,7 +49,7 @@ const Basket = () => {
             <ProductCard product={product} viewMode="basket" />
           </Grid>
         ))}
-        <Box sx={{ mt: 5, display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
+        <Box sx={{ mt: 5, mb: 15, display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
           <Typography variant="h6" component="div" color="white">
             Total Price: ${totalprice.toFixed(2)}
           </Typography>

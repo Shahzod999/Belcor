@@ -7,8 +7,8 @@ export const productsApi = createApi({
   reducerPath: "products",
   baseQuery: fetchBaseQuery({ baseUrl: BASE__URL }),
   endpoints: (builder) => ({
-    getAllProducts: builder.query<ProductsResponse, { limit: number, skip?: number, filter?: string }>({
-      query: ({ limit, skip = 0, filter }) => `/products${filter}?limit=${limit}&skip=${skip}`
+    getAllProducts: builder.query<ProductsResponse, { limit: number, skip?: number, filter?: string, sort?: string }>({
+      query: ({ limit, skip = 0, filter = "", sort = "" }) => `/products${filter}?limit=${limit}&skip=${skip}${sort}`
     }),
     getHightRaiting: builder.query<ProductsResponse, void>({
       query: () => '/products?limit=11&sortBy=rating&order=desc'
