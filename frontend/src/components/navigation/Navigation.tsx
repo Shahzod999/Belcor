@@ -18,7 +18,6 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 const Navigation = () => {
   const userInfo = useAppSelector(selectedUserInfo);
   const [dropDown, setDropDown] = useState(false);
-  const user = false;
 
   return (
     <AppBar sx={{ backgroundColor: "#141414" }}>
@@ -61,7 +60,7 @@ const Navigation = () => {
                 />
               )}
 
-              {user ? <img src="" alt="avatar" /> : <AssignmentIndOutlinedIcon />}
+              <AssignmentIndOutlinedIcon />
             </li>
           </ul>
         </nav>

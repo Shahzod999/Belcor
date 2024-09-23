@@ -24,7 +24,7 @@ const basketSlice = createSlice({
       localStorage.setItem("basket", JSON.stringify(state.basket))
     },
     removeProductFromBasket: (state, action) => {
-      state.basket = state.basket.filter((product) => product.id !== action.payload)
+      state.basket = state.basket.filter((product) => product.id !== action.payload.id)
       localStorage.setItem("basket", JSON.stringify(state.basket))
     }
   }

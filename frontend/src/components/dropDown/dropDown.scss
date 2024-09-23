@@ -6,16 +6,17 @@
   border-radius: 10px;
   background-color: rgb(17, 23, 29);
   border: 0.5px solid rgb(173, 173, 173);
+  color: white;
+  overflow: hidden;
+  a {
+    width: 100%;
+  }
 
   ul {
-    padding: 0 20px 10px 20px;
+    padding: 0;
     li {
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
-      gap: 10px;
+      padding: 0 !important;
       span {
-        margin-right: 5px;
         text-wrap: nowrap;
       }
     }

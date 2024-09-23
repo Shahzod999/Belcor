@@ -6,9 +6,10 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
 import "./auth.scss";
 import { useLogOutUserMutation, useLoginUserMutation, useRegisterUserMutation } from "../../app/api/userApi";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { logout, selectedUserInfo, userInfoHolder } from "../../app/features/userInfoSlice";
+import { useAppDispatch } from "../../app/hooks";
+import { logout, userInfoHolder } from "../../app/features/userInfoSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 type Inputs = {
   username: string;
@@ -34,13 +35,12 @@ const Auth = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const userInfo = useAppSelector(selectedUserInfo);
   const [newUser, setNewUser] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const password = watch("password");
 
-  const [registerUser, { isLoading: isRegisterLoading, isError: isRegisterError, error: registerError }] = useRegisterUserMutation();
-  const [loginUser, { isLoading: isLoginLoading, isError: isLoginError, error: loginError }] = useLoginUserMutation();
+  const [registerUser, { isLoading: isRegisterLoading, error: registerError }] = useRegisterUserMutation();
+  const [loginUser, { isLoading: isLoginLoading, error: loginError }] = useLoginUserMutation();
   const [logOutUser] = useLogOutUserMutation();
   const [commonError, setCommonError] = useState("");
 
@@ -82,6 +82,7 @@ const Auth = () => {
       console.error(err);
     }
   };
+
   useEffect(() => {
     if (pathname == "/logOut") {
       logOuthandler();
@@ -138,9 +139,9 @@ const Auth = () => {
 
         <p className="error">{commonError}</p>
 
-        <button type="submit" disabled={isRegisterLoading || isLoginLoading}>
+        <Button type="submit" variant="contained" disabled={isRegisterLoading || isLoginLoading}>
           Submit
-        </button>
+        </Button>
 
         <p>
           or <span onClick={() => setNewUser(!newUser)}>{newUser ? "Log In" : "Register"}</span>

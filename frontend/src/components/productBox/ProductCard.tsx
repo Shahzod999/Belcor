@@ -1,4 +1,5 @@
 import { Box, Card, CardContent, CardMedia, Typography, Button, Grid, Rating, List, ListItem, ListItemText, Divider, IconButton } from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
@@ -8,7 +9,7 @@ import { addProductToFavorite, removeProductFromFavorite, selectedFavorite } fro
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { addProductToBasket, selectedBasket } from "../../app/features/bascketSlice";
+import { addProductToBasket, removeProductFromBasket, selectedBasket } from "../../app/features/bascketSlice";
 import { useState } from "react";
 
 type ProductCardProps = {
@@ -29,7 +30,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
   const basket = useAppSelector(selectedBasket);
 
   const isFavorite = favorites.some((favProd: any) => favProd.id === product.id);
-  const quantityAdded = basket.find((basketProd: any) => basketProd.id === product.id);
+  const productInBasket = basket.find((basketProd: any) => basketProd.id === product.id);
 
   const toggleFavorite = () => {
     if (isFavorite) {
@@ -39,7 +40,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
     }
   };
   //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
-  const [quantity, setQuantity] = useState(quantityAdded?.quantity || 1);
+  const [quantity, setQuantity] = useState(productInBasket?.quantity || 1);
 
   const handleQuantity = (method: string) => {
     switch (method) {
@@ -56,6 +57,10 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
     dispatch(addProductToBasket({ ...product, quantity }));
   };
 
+  const removeFromBasket = () => {
+    dispatch(removeProductFromBasket(product));
+  };
+
   return (
     <Card
       sx={{
@@ -64,7 +69,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
         p: viewMode === "single" ? 3 : 2,
         boxShadow: "0 0 20px rgba(0, 0, 0, 0.1)",
         transition: "transform 0.3s",
-        "&:hover": { transform: viewMode === "grid" ? "scale(1.05)" : "none" },
+        "&:hover": { transform: viewMode === "grid" || viewMode === "basket" ? "scale(1.05)" : "none" },
         position: "relative",
       }}>
       <Box position="absolute" right={10} top={10} onClick={toggleFavorite} sx={{ cursor: "pointer" }}>
@@ -146,26 +151,35 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
                   </IconButton>
                 </Box>
 
-                <Button onClick={handleAddToBasket} variant="contained" color="primary" sx={{ mt: 2 }}>
-                  Add to Basket
+                <Button onClick={handleAddToBasket} variant="contained" color="primary" >
+                  {productInBasket ? "Change Basket" : "Add to Basket"}
                 </Button>
               </>
             )}
+
+            {(viewMode === "basket" || viewMode === "single") && productInBasket && (
+              <IconButton aria-label="delete" size="large" onClick={removeFromBasket}>
+                <DeleteForeverIcon fontSize="inherit" />
+              </IconButton>
+            )}
+
             {viewMode === "basket" && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 10,
-                  left: 10,
-                  padding: 2,
-                  backgroundColor: "primary.main",
-                  borderRadius: 1,
-                  boxShadow: 3,
-                  display: "flex",
-                  alignItems: "center",
-                }}>
-                <Typography sx={{ color: "white", fontSize: "13px" }}>Items in Basket: {quantityAdded?.quantity || 0}</Typography>
-              </Box>
+              <>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 10,
+                    left: 10,
+                    padding: 2,
+                    backgroundColor: "primary.main",
+                    borderRadius: 1,
+                    boxShadow: 3,
+                    display: "flex",
+                    alignItems: "center",
+                  }}>
+                  <Typography sx={{ color: "white", fontSize: "13px" }}>Items in Basket: {productInBasket?.quantity || 0}</Typography>
+                </Box>
+              </>
             )}
 
             {/* Ссылка на продукт в режиме "grid" */}

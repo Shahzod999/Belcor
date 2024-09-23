@@ -1,5 +1,6 @@
 import "./dropDown.scss";
 import { Link } from "react-router-dom";
+import { Box, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 
 interface DropDownProps {
   items: { label: string; icon: JSX.Element; href?: string }[];
@@ -11,25 +12,27 @@ const DropDown = ({ items }: DropDownProps) => {
   };
 
   return (
-    <div className="dropDown" onClick={handleDropDownClick}>
-      <ul>
+    <Box className="dropDown" onClick={handleDropDownClick}>
+      <List>
         {items.map((item, index) => (
-          <li key={index}>
+          <ListItem key={index}>
             {item.href ? (
               <Link to={item.href}>
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
+                <ListItemButton sx={{ justifyContent: "space-between" }}>
+                  <ListItemText>{item.icon}</ListItemText>
+                  <ListItemText>{item.label}</ListItemText>
+                </ListItemButton>
               </Link>
             ) : (
-              <>
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
-              </>
+              <ListItemButton>
+                <ListItemText>{item.icon}</ListItemText>
+                <ListItemText>{item.label}</ListItemText>
+              </ListItemButton>
             )}
-          </li>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   );
 };
 
