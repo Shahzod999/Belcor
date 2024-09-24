@@ -11,7 +11,6 @@ const App = () => {
         <Outlet />
       </main>
       <footer>
-        
       </footer>
     </>
   );

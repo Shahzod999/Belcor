@@ -5,12 +5,10 @@ import LockIcon from "@mui/icons-material/Lock";
 
 const Admin = () => {
   const userAdmin = useAppSelector(selectedUserInfo);
-  
-  
-  
+
   if (userAdmin?.isAdmin) {
     return (
-      <div>
+      <Box mt={10}>
         <h1>Admin</h1>
         <h1>Admin</h1>
         <h1>Admin</h1>
@@ -36,7 +34,7 @@ const Admin = () => {
         <h1>Admin</h1>
         <h1>Admin</h1>
         <h1>Admin</h1>
-      </div>
+      </Box>
     );
   } else
     return (

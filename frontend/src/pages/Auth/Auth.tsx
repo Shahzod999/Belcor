@@ -10,20 +10,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { logout, userInfoHolder } from "../../app/features/userInfoSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-
-type Inputs = {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
-
-interface AuthStateError {
-  status: string;
-  originalStatus: number;
-  data: string;
-  error: string;
-}
+import { AuthStateError, Inputs } from "../../app/types/formTypes";
 
 const Auth = () => {
   const {

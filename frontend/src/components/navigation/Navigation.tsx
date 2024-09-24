@@ -10,7 +10,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import { useState } from "react";
-import { AppBar, Container } from "@mui/material";
+import { AppBar, Container, Typography } from "@mui/material";
 import { useAppSelector } from "../../app/hooks";
 import { selectedUserInfo } from "../../app/features/userInfoSlice";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
@@ -24,7 +24,9 @@ const Navigation = () => {
       <Container>
         <nav className="header__navigation">
           <Link to="/">
-            <h3>BELOR</h3>
+            <Typography color="wheat" variant="h6" fontWeight={600}>
+              BELCOR
+            </Typography>
           </Link>
           <ul>
             <li>

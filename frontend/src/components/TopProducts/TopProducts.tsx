@@ -26,7 +26,7 @@ const TopProducts = () => {
   }
 
   return (
-    <Box sx={{ marginTop: "100px" }}>
+    <Box sx={{ mt: 10 }}>
       <Swiper
         effect={"cube"}
         grabCursor={true}

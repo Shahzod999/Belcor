@@ -46,7 +46,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const existingUser = await User.findOne({ email });
-  
+
   if (existingUser) {
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
     if (isPasswordValid) {
@@ -90,4 +90,31 @@ const getCurrentUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { createUser, loginUser, logoutCurrentUser, getCurrentUserProfile };
+const updateCurrentuserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      user.password = hashedPassword;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+export { createUser, loginUser, logoutCurrentUser, getCurrentUserProfile, updateCurrentuserProfile };

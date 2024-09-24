@@ -13,7 +13,7 @@ const initialState: favoriteState = {
     basket: [],
     totalprice: 0,
     cardNumber: "",
-    userName: ""
+    userInfo: {}
   }
 }
 
@@ -35,7 +35,7 @@ const basketSlice = createSlice({
       localStorage.setItem("basket", JSON.stringify(state.basket))
     },
     addToTotalOrderForWaiting: (state, action) => {
-      const { basket, totalprice, cardNumber } = action.payload
+      const { basket, totalprice, cardNumber, userInfo } = action.payload
 
       basket.forEach((element: any) => {
         const { title, quantity, price, brand, category, stock, availabilityStatus } = element
@@ -43,6 +43,7 @@ const basketSlice = createSlice({
       });
       state.waitingOrderList.totalprice = totalprice
       state.waitingOrderList.cardNumber = cardNumber
+      state.waitingOrderList.userInfo = userInfo
     }
   }
 })

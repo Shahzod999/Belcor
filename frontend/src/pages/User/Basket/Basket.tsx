@@ -3,13 +3,13 @@ import ProductCard from "../../../components/productBox/ProductCard";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { addToTotalOrderForWaiting, selectedBasket, selectedWaitingOrderList } from "../../../app/features/bascketSlice";
 import { ChangeEvent, useState } from "react";
-import { useGetProfileUserQuery } from "../../../app/api/userApi";
+import { selectedUserInfo } from "../../../app/features/userInfoSlice";
 
 const Basket = () => {
   const dispatch = useAppDispatch();
   const basket = useAppSelector(selectedBasket);
   const waitingOrderList = useAppSelector(selectedWaitingOrderList);
-  const { data } = useGetProfileUserQuery();
+  const userInfo = useAppSelector(selectedUserInfo);
   const [open, setOpen] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
   const totalprice = basket.reduce((acc, curr) => acc + Number(curr.price) * Number(curr.quantity), 0);
@@ -22,10 +22,9 @@ const Basket = () => {
     if (!cardNumber) {
       return alert("Error Fill required");
     }
-    console.log("Order Confirmed!");
-    console.log("Card Number:", cardNumber);
     setOpen(false);
-    dispatch(addToTotalOrderForWaiting({ basket, totalprice, cardNumber }));
+    dispatch(addToTotalOrderForWaiting({ basket, totalprice, cardNumber, userInfo }));
+    alert("Order Confirmed!");
   };
 
   const handleCardNumber = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,11 +38,10 @@ const Basket = () => {
   };
 
   console.log(waitingOrderList, "11221543298875");
-  console.log(data);
 
   return (
     <>
-      <Grid container spacing={2} sx={{ marginTop: "70px" }}>
+      <Grid container spacing={2} sx={{ mt: 10 }}>
         {basket.map((product) => (
           <Grid item key={product.id} xs={12} sm={6} md={4}>
             <ProductCard product={product} viewMode="basket" />

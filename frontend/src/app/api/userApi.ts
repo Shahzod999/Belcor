@@ -30,9 +30,19 @@ export const userApi = createApi({
         body: data
       })
     }),
+
+    //пауза тут
     getProfileUser: builder.query<UserState, void>({
       query: () => ({
         url: "/belcor/user/profile"
+      })
+    }),
+
+    updateUserProfile: builder.mutation<UserState, void>({
+      query: (data) => ({
+        url: "/belcor/user/profile",
+        method: "PUT",
+        body: data
       })
     }),
     logOutUser: builder.mutation<LogoutResponse, void>({
@@ -44,4 +54,4 @@ export const userApi = createApi({
   })
 })
 
-export const { useGetProfileUserQuery, useRegisterUserMutation, useLoginUserMutation, useLogOutUserMutation } = userApi
+export const { useGetProfileUserQuery, useUpdateUserProfileMutation, useRegisterUserMutation, useLoginUserMutation, useLogOutUserMutation } = userApi
