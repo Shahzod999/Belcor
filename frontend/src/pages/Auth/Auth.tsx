@@ -51,6 +51,8 @@ const Auth = () => {
   };
 
   const handleLogIn = async (data: Inputs) => {
+    console.log(data);
+
     try {
       const res = await loginUser(data).unwrap();
       dispatch(userInfoHolder(res));

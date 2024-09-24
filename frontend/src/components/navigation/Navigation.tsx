@@ -11,14 +11,14 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import { useState } from "react";
 import { AppBar, Container, Typography } from "@mui/material";
-import { useAppSelector } from "../../app/hooks";
-import { selectedUserInfo } from "../../app/features/userInfoSlice";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import { useGetProfileUserQuery } from "../../app/api/userApi";
+import Loader from "../Loader";
 
 const Navigation = () => {
-  const userInfo = useAppSelector(selectedUserInfo);
+  // const userInfo = useAppSelector(selectedUserInfo);
+  const { data: userInfo, error, isLoading } = useGetProfileUserQuery();
   const [dropDown, setDropDown] = useState(false);
-
   return (
     <AppBar sx={{ backgroundColor: "#141414" }}>
       <Container>
@@ -44,6 +44,7 @@ const Navigation = () => {
                 <ShoppingCartOutlinedIcon />
               </Link>
             </li>
+            <>{isLoading && <Loader />}</>
             {userInfo?.isAdmin && (
               <li>
                 <Link to="/profile/admin" data-text="Basket">
