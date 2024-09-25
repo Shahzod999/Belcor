@@ -47,7 +47,7 @@ const Navigation = () => {
             <>{isLoading && <Loader />}</>
             {userInfo?.isAdmin && (
               <li>
-                <Link to="/profile/admin" data-text="Basket">
+                <Link to="/profile/admin" data-text="Orders">
                   <AdminPanelSettingsIcon />
                 </Link>
               </li>

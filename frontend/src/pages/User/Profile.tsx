@@ -80,7 +80,7 @@ const Profile = () => {
             password
           </InputLabel>
           <Input
-            {...register("password")}
+            {...register("password", { minLength: { value: 6, message: "Password must be at least 6 characters" } })}
             type={showPassword ? "password" : "input"}
             autoComplete="password"
             disableUnderline={true}
@@ -103,7 +103,7 @@ const Profile = () => {
             Confirm Password
           </InputLabel>
           <Input
-            {...register("confirmPassword")}
+            {...register("confirmPassword", { validate: (v) => v === password || "Passwords do not match" })}
             type={showPassword ? "password" : "input"}
             autoComplete="confirmPassword"
             disableUnderline={true}

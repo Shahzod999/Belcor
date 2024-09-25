@@ -22,7 +22,7 @@ const Home = () => {
   });
 
   const { data, error, isLoading } = useGetAllProductsQuery({
-    limit: 5,
+    limit: 20,
     skip: pagePagination,
     filter: filters.category ? `${filters.category}` : "",
     sortBy: filters.price ? "price" : filters.name ? "title" : "",
@@ -61,7 +61,7 @@ const Home = () => {
   };
 
   const handlePagination = (page: number) => {
-    setPagePagination(page * 30);
+    setPagePagination(page * 20);
     console.log(`Текущая страница: ${page}`);
   };
 
