@@ -15,19 +15,19 @@ interface LogoutResponse {
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: USER_URL }),
   tagTypes: ["UserProfile"],
   endpoints: (builder) => ({
     registerUser: builder.mutation<UserState, DataState>({
       query: (data) => ({
-        url: `${USER_URL}`,
+        url: "",
         method: "POST",
         body: data
       })
     }),
     loginUser: builder.mutation<UserState, DataState>({
       query: (data) => ({
-        url: `${USER_URL}/auth`,
+        url: "/auth",
         method: "POST",
         body: data
       })
@@ -36,14 +36,14 @@ export const userApi = createApi({
     //пауза тут
     getProfileUser: builder.query<UserState, void>({
       query: () => ({
-        url: `${USER_URL}/profile`
+        url: "/profile"
       }),
       providesTags: ["UserProfile"],
     }),
 
-    updateUserProfile: builder.mutation<UserState, void>({
+    updateUserProfile: builder.mutation<UserState, DataState>({
       query: (data) => ({
-        url: `${USER_URL}/profile`,
+        url: "/profile",
         method: "PUT",
         body: data
       }),
@@ -51,7 +51,7 @@ export const userApi = createApi({
     }),
     logOutUser: builder.mutation<LogoutResponse, void>({
       query: () => ({
-        url: `${USER_URL}/logout`,
+        url: "/logout",
         method: "POST"
       })
     })

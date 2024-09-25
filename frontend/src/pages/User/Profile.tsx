@@ -4,9 +4,10 @@ import { selectedUserInfo, userInfoHolder } from "../../app/features/userInfoSli
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Box, Button, FormControl, FormHelperText, Input, InputAdornment, InputLabel, Paper, Typography, colors } from "@mui/material";
+import { Box, Button, FormControl, FormHelperText, Input, InputAdornment, InputLabel, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import Loader from "../../components/Loader";
+import { Inputs } from "../../app/types/formTypes";
 
 const Profile = () => {
   const inputLabelStyles = {
@@ -25,11 +26,10 @@ const Profile = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<Inputs>();
   const password = watch("password");
 
   const onSubmit = async (data: any) => {
-    console.log({ _id: userInfo?._id, ...data });
     try {
       const res = await updateUserProfile({ _id: userInfo?._id, ...data }).unwrap();
       dispatch(userInfoHolder({ ...res }));
@@ -53,7 +53,7 @@ const Profile = () => {
             User Name
           </InputLabel>
           <Input {...register("username", { required: "Please enter Name" })} type="text" disableUnderline={true} defaultValue={userInfo?.username} />
-          {errors.username && <FormHelperText sx={{ color: "#d15e5e" }}>{errors.username.message}</FormHelperText>}
+          {errors.username && <FormHelperText sx={{ color: "#d15e5e" }}>{errors.username?.message}</FormHelperText>}
         </FormControl>
 
         <FormControl fullWidth margin="normal">
@@ -103,7 +103,14 @@ const Profile = () => {
             Confirm Password
           </InputLabel>
           <Input
-            {...register("confirmPassword", { validate: (v) => v === password || "Passwords do not match" })}
+            {...register("confirmPassword", {
+              validate: (v) => {
+                if (!password) {
+                  return true;
+                }
+                return v === password || "Passwords do not match";
+              },
+            })}
             type={showPassword ? "password" : "input"}
             autoComplete="confirmPassword"
             disableUnderline={true}

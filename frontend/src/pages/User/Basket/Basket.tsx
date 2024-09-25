@@ -1,35 +1,60 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
 import ProductCard from "../../../components/productBox/ProductCard";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { addToTotalOrderForWaiting, selectedBasket, selectedWaitingOrderList } from "../../../app/features/bascketSlice";
+import { useAppSelector } from "../../../app/hooks";
+import { selectedBasket } from "../../../app/features/bascketSlice";
 import { ChangeEvent, useState } from "react";
 import { selectedUserInfo } from "../../../app/features/userInfoSlice";
+import { useSendOrderMutation } from "../../../app/api/ordersApi";
+import { BasketItem } from "../../../app/types/basketSendOrder";
+import Loader from "../../../components/Loader";
+import WaitingOrders from "../../../components/waitingOrderlist/WaitingOrders";
 
 const Basket = () => {
-  const dispatch = useAppDispatch();
   const basket = useAppSelector(selectedBasket);
-  const waitingOrderList = useAppSelector(selectedWaitingOrderList);
   const userInfo = useAppSelector(selectedUserInfo);
   const [open, setOpen] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
   const totalprice = basket.reduce((acc, curr) => acc + Number(curr.price) * Number(curr.quantity), 0);
+  const [sendOrder, { isLoading: sendingOrderLoading }] = useSendOrderMutation();
 
   const handleToggalConfirm = () => {
     setOpen(!open);
   };
 
-  const handleConfirmOrder = () => {
+  console.log(basket);
+
+  const handleConfirmOrder = async () => {
+    let orders: BasketItem[] = [];
+
     if (!cardNumber) {
-      return alert("Error Fill required");
+      return alert("Error: Please fill in the required card number.");
+    }
+    if (!basket || basket.length === 0) {
+      setOpen(false);
+      return alert("Error: Your basket is empty.");
+    }
+
+    const endPoint = confirm("Would you like to confirm the order?");
+    if (!endPoint) {
+      return alert("You have canceled the order.");
+    }
+
+    basket.forEach((element) => {
+      const { title, quantity, price, brand, category, stock, availabilityStatus } = element;
+      orders.push({ title, quantity, price, brand, category, stock, availabilityStatus });
+    });
+
+    try {
+      const res = await sendOrder({ basket: orders, totalprice, cardNumber, userInfo }).unwrap();
+      console.log(res, "Alhamdullilah");
+    } catch (error) {
+      console.log(error);
     }
     setOpen(false);
-    dispatch(addToTotalOrderForWaiting({ basket, totalprice, cardNumber, userInfo }));
-    alert("Order Confirmed!");
   };
 
   const handleCardNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const number = e.target.value;
-    // Проверка: только цифры
     if (!/^\d*$/.test(number)) {
       alert("Only numbers are allowed for the card number.");
       return;
@@ -37,10 +62,9 @@ const Basket = () => {
     setCardNumber(number);
   };
 
-  console.log(waitingOrderList, "11221543298875");
-
   return (
     <>
+      {sendingOrderLoading && <Loader />}
       <Grid container spacing={2} sx={{ mt: 10 }}>
         {basket.map((product) => (
           <Grid item key={product.id} xs={12} sm={6} md={4}>
@@ -75,6 +99,7 @@ const Basket = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <WaitingOrders />
     </>
   );
 };

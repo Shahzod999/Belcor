@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BASE__URL } from "../constants";
+import { BASE_DUMMY_URL } from "../constants";
 import { Product, ProductsResponse } from "../types/ProductTypes";
 
 
 export const productsApi = createApi({
   reducerPath: "products",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE__URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: BASE_DUMMY_URL }),
   endpoints: (builder) => ({
     getAllProducts: builder.query<ProductsResponse, { limit: number, skip?: number, filter?: string, sortBy?: string, order?: string }>({
       query: ({ limit, skip = 0, filter = "", sortBy = "", order = "" }) => {

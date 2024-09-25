@@ -10,7 +10,7 @@ import { addProductToFavorite, removeProductFromFavorite, selectedFavorite } fro
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { addProductToBasket, removeProductFromBasket, selectedBasket } from "../../app/features/bascketSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ProductCardProps = {
   product: any;
@@ -25,12 +25,17 @@ export interface ReviewState {
 }
 
 const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
+  //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
+
   const dispatch = useAppDispatch();
   const favorites = useAppSelector(selectedFavorite);
   const basket = useAppSelector(selectedBasket);
 
   const isFavorite = favorites.some((favProd: any) => favProd.id === product.id);
   const productInBasket = basket.find((basketProd: any) => basketProd.id === product.id);
+  const [quantity, setQuantity] = useState(productInBasket?.quantity || 1);
+
+  const totalPriceProduct = (product.price * quantity).toFixed(2);
 
   const toggleFavorite = () => {
     if (isFavorite) {
@@ -39,8 +44,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
       dispatch(addProductToFavorite(product));
     }
   };
-  //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
-  const [quantity, setQuantity] = useState(productInBasket?.quantity || 1);
 
   const handleQuantity = (method: string) => {
     switch (method) {
@@ -48,13 +51,14 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
         setQuantity((prev) => prev + 1);
         break;
       case "-":
-        setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+        // пауза тут исправить минус вычитание
+        setQuantity((prev) => Math.max(prev - 1, 0));
         break;
     }
   };
 
   const handleAddToBasket = () => {
-    dispatch(addProductToBasket({ ...product, quantity }));
+    dispatch(addProductToBasket({ ...product, quantity: quantity, totalPriceProduct }));
   };
 
   const removeFromBasket = () => {
@@ -111,7 +115,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
             </Typography>
             {(viewMode === "single" || viewMode === "basket") && (
               <Typography color="secondary" sx={{ fontWeight: "bold", mb: 2 }}>
-                Total Price: ${(product.price * quantity).toFixed(2)} x {quantity}
+                Total Price: ${totalPriceProduct} x {quantity}
               </Typography>
             )}
 
@@ -151,7 +155,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
                   </IconButton>
                 </Box>
 
-                <Button onClick={handleAddToBasket} variant="contained" color="primary" >
+                <Button onClick={handleAddToBasket} variant="contained" color="primary">
                   {productInBasket ? "Change Basket" : "Add to Basket"}
                 </Button>
               </>

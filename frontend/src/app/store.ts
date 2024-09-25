@@ -5,6 +5,7 @@ import { productsApi } from "./api/dataFromDummy";
 import { userApi } from "./api/userApi";
 import favoriteSlice from "./features/favoriteSlice";
 import bascketSlice from "./features/bascketSlice";
+import { ordersApi } from "./api/ordersApi";
 
 export const store = configureStore({
   reducer: {
@@ -12,9 +13,10 @@ export const store = configureStore({
     favorite: favoriteSlice,
     basket: bascketSlice,
     [productsApi.reducerPath]: productsApi.reducer,
-    [userApi.reducerPath]: userApi.reducer
+    [userApi.reducerPath]: userApi.reducer,
+    [ordersApi.reducerPath]: ordersApi.reducer
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(productsApi.middleware).concat(userApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(productsApi.middleware).concat(userApi.middleware).concat(ordersApi.middleware),
 });
 
 setupListeners(store.dispatch);
