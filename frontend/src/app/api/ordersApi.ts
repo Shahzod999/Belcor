@@ -1,27 +1,31 @@
 import { ORDERS_URL } from "../constants";
 import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
-import { Order, SendOrderState } from "../types/basketSendOrder";
+import { OrderState } from "../types/basketSendOrder";
 
 export const ordersApi = createApi({
   reducerPath: "ordersApi",
   baseQuery: fetchBaseQuery({ baseUrl: ORDERS_URL }),
+  tagTypes: ["OrderUpdate"],
   endpoints: (builder) => ({
-    getUserOrders: builder.query<Order[], void>({
+    getUserOrders: builder.query<OrderState[], void>({
       query: () => ({
         url: ""
-      })
+      }),
+      providesTags: ["OrderUpdate"],
     }),
-    getAllOrders: builder.query<Order[], void>({
+    getAllOrders: builder.query<OrderState[], void>({
       query: () => ({
         url: "/onlyAdmin",
-      })
+      }),
+      providesTags: ["OrderUpdate"],
     }),
-    sendOrder: builder.mutation<SendOrderState, SendOrderState>({
+    sendOrder: builder.mutation<OrderState, OrderState>({
       query: (data) => ({
         url: "/sendOrder",
         method: "PUT",
         body: data
-      })
+      }),
+      invalidatesTags: ["OrderUpdate"],
     })
   })
 })

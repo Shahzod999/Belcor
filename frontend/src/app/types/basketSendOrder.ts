@@ -1,33 +1,17 @@
 import { UserState } from "./UserTypes";
 
-
-export interface SendOrderState {
-  basket: Basket[]
+export interface OrderState {
+  _id?: string
+  basket: BasketState[]
   totalprice: number
   cardNumber: string
   userInfo: UserState
-  _id?: string
-  createdAt?: string
+  createdAt?: string | number | Date;
   updatedAt?: string
   __v?: number
 }
 
-
-
-
-
-export interface Order {
-  _id: string
-  basket: Basket[]
-  totalprice: number
-  cardNumber: string
-  userInfo: UserState
-  createdAt: string
-  updatedAt: string
-  __v: number
-}
-
-export interface Basket {
+export interface BasketState {
   title: string
   quantity: number | undefined
   price: number
@@ -36,4 +20,10 @@ export interface Basket {
   stock: number
   availabilityStatus: string
   _id?: string
+}
+
+export interface WaitingOrdersProps {
+  data: OrderState[] | undefined;
+  isError: boolean;
+  isLoading: boolean;
 }

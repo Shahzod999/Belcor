@@ -1,11 +1,10 @@
-import { useGetUserOrdersQuery } from "../../app/api/ordersApi";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@mui/material";
 import Loader from "../Loader";
 import Error from "../Error";
+import { WaitingOrdersProps } from "../../app/types/basketSendOrder";
 
-const WaitingOrders = () => {
-  const { data: waitingOrderList, isError, isLoading } = useGetUserOrdersQuery();
-  console.log(waitingOrderList, "8");
+const WaitingOrders = ({ data: waitingOrderList, isError, isLoading }: WaitingOrdersProps) => {
+  console.log(waitingOrderList);
 
   if (isLoading) {
     return <Loader />;
@@ -53,7 +52,7 @@ const WaitingOrders = () => {
               <TableCell align="right">${order.totalprice.toFixed(2)}</TableCell>
               <TableCell align="right">**** **** **** {order.cardNumber.slice(-4)}</TableCell>
               <TableCell align="right">{order.userInfo.username}</TableCell>
-              <TableCell align="right">{new Date(order.createdAt).toLocaleString()}</TableCell>
+              <TableCell align="right">{order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"}</TableCell>
             </TableRow>
           ))}
         </TableBody>

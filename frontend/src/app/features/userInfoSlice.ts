@@ -21,6 +21,8 @@ const userInfoSlice = createSlice({
     logout: (state) => {
       state.userInfo = null;
       localStorage.removeItem("userInfo")
+      localStorage.removeItem("favorite")
+      localStorage.removeItem("waitingOrderList")
     }
   }
 })

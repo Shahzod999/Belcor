@@ -1,17 +1,19 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
 import ProductCard from "../../../components/productBox/ProductCard";
-import { useAppSelector } from "../../../app/hooks";
-import { selectedBasket } from "../../../app/features/bascketSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { removeTotalBasket, selectedBasket } from "../../../app/features/bascketSlice";
 import { ChangeEvent, useState } from "react";
 import { selectedUserInfo } from "../../../app/features/userInfoSlice";
-import { useSendOrderMutation } from "../../../app/api/ordersApi";
-import { Basket } from "../../../app/types/basketSendOrder";
+import { useGetUserOrdersQuery, useSendOrderMutation } from "../../../app/api/ordersApi";
+import { BasketState } from "../../../app/types/basketSendOrder";
 import Loader from "../../../components/Loader";
 import WaitingOrders from "../../../components/waitingOrderlist/WaitingOrders";
 
 const Basket = () => {
+  const dispatch = useAppDispatch();
   const basket = useAppSelector(selectedBasket);
   const userInfo = useAppSelector(selectedUserInfo);
+  const waitingOrderList = useGetUserOrdersQuery();
   const [open, setOpen] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
   const totalprice = basket.reduce((acc, curr) => acc + Number(curr.price) * Number(curr.quantity), 0);
@@ -24,7 +26,7 @@ const Basket = () => {
   console.log(basket);
 
   const handleConfirmOrder = async () => {
-    let orders: Basket[] = [];
+    let orders: BasketState[] = [];
 
     if (!cardNumber) {
       return alert("Error: Please fill in the required card number.");
@@ -49,6 +51,7 @@ const Basket = () => {
 
     try {
       const res = await sendOrder({ basket: orders, totalprice, cardNumber, userInfo }).unwrap();
+      dispatch(removeTotalBasket());
       console.log(res, "Alhamdullilah");
     } catch (error) {
       console.log(error);
@@ -102,7 +105,7 @@ const Basket = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <WaitingOrders />
+      <WaitingOrders data={waitingOrderList.data} isError={waitingOrderList.isError} isLoading={waitingOrderList.isLoading} />
     </>
   );
 };

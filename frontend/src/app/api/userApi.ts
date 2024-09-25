@@ -23,14 +23,16 @@ export const userApi = createApi({
         url: "",
         method: "POST",
         body: data
-      })
+      }),
+      invalidatesTags: ["UserProfile"],
     }),
     loginUser: builder.mutation<UserState, DataState>({
       query: (data) => ({
         url: "/auth",
         method: "POST",
         body: data
-      })
+      }),
+      invalidatesTags: ["UserProfile"],
     }),
 
     //пауза тут
@@ -53,7 +55,7 @@ export const userApi = createApi({
       query: () => ({
         url: "/logout",
         method: "POST"
-      })
+      }),
     })
   })
 })
