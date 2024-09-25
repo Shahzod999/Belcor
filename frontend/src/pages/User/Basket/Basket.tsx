@@ -5,7 +5,7 @@ import { selectedBasket } from "../../../app/features/bascketSlice";
 import { ChangeEvent, useState } from "react";
 import { selectedUserInfo } from "../../../app/features/userInfoSlice";
 import { useSendOrderMutation } from "../../../app/api/ordersApi";
-import { BasketItem } from "../../../app/types/basketSendOrder";
+import { Basket } from "../../../app/types/basketSendOrder";
 import Loader from "../../../components/Loader";
 import WaitingOrders from "../../../components/waitingOrderlist/WaitingOrders";
 
@@ -24,7 +24,7 @@ const Basket = () => {
   console.log(basket);
 
   const handleConfirmOrder = async () => {
-    let orders: BasketItem[] = [];
+    let orders: Basket[] = [];
 
     if (!cardNumber) {
       return alert("Error: Please fill in the required card number.");
@@ -34,6 +34,9 @@ const Basket = () => {
       return alert("Error: Your basket is empty.");
     }
 
+    if (!userInfo) {
+      return alert("Error User Info");
+    }
     const endPoint = confirm("Would you like to confirm the order?");
     if (!endPoint) {
       return alert("You have canceled the order.");

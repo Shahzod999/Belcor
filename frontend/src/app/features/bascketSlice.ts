@@ -34,5 +34,4 @@ const basketSlice = createSlice({
 
 export const { addProductToBasket, removeProductFromBasket } = basketSlice.actions
 export const selectedBasket = (state: RootState) => state.basket.basket
-export const selectedWaitingOrderList = (state: RootState) => state.basket.waitingOrderList
 export default basketSlice.reducer

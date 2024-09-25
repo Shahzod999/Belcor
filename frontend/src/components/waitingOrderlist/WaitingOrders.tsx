@@ -2,10 +2,10 @@ import { useGetUserOrdersQuery } from "../../app/api/ordersApi";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@mui/material";
 import Loader from "../Loader";
 import Error from "../Error";
-import { Order } from "../../app/types/basketSendOrder";
 
 const WaitingOrders = () => {
-  const { data: waitingOrderList, isError, isLoading } = useGetUserOrdersQuery<Order[]>();
+  const { data: waitingOrderList, isError, isLoading } = useGetUserOrdersQuery();
+  console.log(waitingOrderList, "8");
 
   if (isLoading) {
     return <Loader />;
@@ -32,7 +32,7 @@ const WaitingOrders = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {waitingOrderList.map((order) => (
+          {waitingOrderList?.map((order) => (
             <TableRow key={order._id}>
               <TableCell>{order._id}</TableCell>
               <TableCell>
