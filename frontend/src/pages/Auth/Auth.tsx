@@ -1,16 +1,21 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
 import "./auth.scss";
-import { useLogOutUserMutation, useLoginUserMutation, useRegisterUserMutation } from "../../app/api/userApi";
+import {
+  useLogOutUserMutation,
+  useLoginUserMutation,
+  useRegisterUserMutation,
+} from "../../app/api/userApi";
 import { useAppDispatch } from "../../app/hooks";
 import { logout, userInfoHolder } from "../../app/features/userInfoSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import { AuthStateError, Inputs } from "../../app/types/formTypes";
+import { Inputs } from "../../app/types/formTypes";
+import { ErrorState } from "../../app/types/UserTypes";
 
 const Auth = () => {
   const {
@@ -26,8 +31,9 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const password = watch("password");
 
-  const [registerUser, { isLoading: isRegisterLoading, error: registerError }] = useRegisterUserMutation();
-  const [loginUser, { isLoading: isLoginLoading, error: loginError }] = useLoginUserMutation();
+  const [registerUser, { isLoading: isRegisterLoading }] =
+    useRegisterUserMutation();
+  const [loginUser, { isLoading: isLoginLoading }] = useLoginUserMutation();
   const [logOutUser] = useLogOutUserMutation();
   const [commonError, setCommonError] = useState("");
 
@@ -44,9 +50,10 @@ const Auth = () => {
       const res = await registerUser(data).unwrap();
       dispatch(userInfoHolder(res));
       navigate("/profile");
-    } catch (err) {
-      console.error(err);
-      setCommonError((registerError as AuthStateError)?.data);
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as ErrorState)?.data?.message || "An unknown error occurred";
+      setCommonError(errorMessage);
     }
   };
 
@@ -55,26 +62,27 @@ const Auth = () => {
       const res = await loginUser(data).unwrap();
       dispatch(userInfoHolder(res));
       navigate("/profile");
-    } catch (err) {
-      console.error(err);
-      setCommonError((loginError as AuthStateError)?.data);
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as ErrorState)?.data?.message || "An unknown error occurred";
+      setCommonError(errorMessage);
     }
   };
 
-  const logOuthandler = async () => {
+  const logOuthandler = useCallback(async () => {
     try {
       await logOutUser().unwrap();
       dispatch(logout());
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [dispatch, logOutUser]);
 
   useEffect(() => {
     if (pathname == "/logOut") {
       logOuthandler();
     }
-  }, [pathname]);
+  }, [pathname, logOuthandler]);
 
   return (
     <div className="auth">
@@ -83,10 +91,16 @@ const Auth = () => {
           <>
             <label htmlFor="username">Name</label>
             <div>
-              <input type="text" id="username" {...register("username", { required: "Please enter Name" })} />
+              <input
+                type="text"
+                id="username"
+                {...register("username", { required: "Please enter Name" })}
+              />
               <BadgeIcon />
             </div>
-            {errors.username && <p className="error">{errors.username.message}</p>}
+            {errors.username && (
+              <p className="error">{errors.username.message}</p>
+            )}
           </>
         )}
         <label htmlFor="email">Email</label>
@@ -108,8 +122,20 @@ const Auth = () => {
 
         <label htmlFor="password">Password</label>
         <div>
-          <input type={showPassword ? "text" : "password"} id="password" {...register("password", { required: "Please enter Password", minLength: { value: 6, message: "Password must be at least 6 characters" } })} />
-          <div onClick={() => setShowPassword(!showPassword)}>{showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}</div>
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            {...register("password", {
+              required: "Please enter Password",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+          />
+          <div onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+          </div>
         </div>
         {errors.password && <p className="error">{errors.password.message}</p>}
 
@@ -117,21 +143,38 @@ const Auth = () => {
           <>
             <label htmlFor="confirmPassword">Confirm Password</label>
             <div>
-              <input type={showPassword ? "text" : "password"} id="confirmPassword" {...register("confirmPassword", { required: "Please enter confirm Password", validate: (v) => v === password || "Passwords do not match" })} />
-              <div onClick={() => setShowPassword(!showPassword)}>{showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}</div>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="confirmPassword"
+                {...register("confirmPassword", {
+                  required: "Please enter confirm Password",
+                  validate: (v) => v === password || "Passwords do not match",
+                })}
+              />
+              <div onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </div>
             </div>
-            {errors.confirmPassword && <p className="error">{errors.confirmPassword.message}</p>}
+            {errors.confirmPassword && (
+              <p className="error">{errors.confirmPassword.message}</p>
+            )}
           </>
         )}
 
         <p className="error">{commonError}</p>
 
-        <Button type="submit" variant="contained" disabled={isRegisterLoading || isLoginLoading}>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isRegisterLoading || isLoginLoading}>
           Submit
         </Button>
 
         <p>
-          or <span onClick={() => setNewUser(!newUser)}>{newUser ? "Log In" : "Register"}</span>
+          or{" "}
+          <span onClick={() => setNewUser(!newUser)}>
+            {newUser ? "Log In" : "Register"}
+          </span>
         </p>
       </form>
     </div>

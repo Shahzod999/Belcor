@@ -7,22 +7,21 @@ const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    throw new Error("Please fill all inputs");
+    throw new Error("Please fill all fields");
   }
 
   const userExist = await User.findOne({ email });
 
-  if (userExist) return res.status(400).send("User already exists");
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  const newUser = new User({ username, email, password: hashedPassword });
+  if (userExist) {
+    throw new Error("User already exists");
+  }
 
   try {
-    await newUser.save();
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newUser = new User({ username, email, password: hashedPassword });
 
-    // Если сохранение прошло успешно, отправляем ответ.
+    await newUser.save();
     createToken(res, newUser._id);
 
     return res.status(201).json({
@@ -32,9 +31,10 @@ const createUser = asyncHandler(async (req, res) => {
       isAdmin: newUser.isAdmin,
     });
   } catch (err) {
-    console.error("Ошибка при сохранении пользователя: ", err);
-    res.status(400).json({ message: "Invalid user data" });
-    throw new Error("Invalid user data");
+    console.error("Error saving user: ", err);
+    return res
+      .status(500)
+      .json({ message: "Server error, please try again later" });
   }
 });
 
@@ -44,26 +44,25 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!email || !password) {
     throw new Error("Password and Email required");
   }
-
   const existingUser = await User.findOne({ email });
 
-  if (existingUser) {
-    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-    if (isPasswordValid) {
-      createToken(res, existingUser._id);
-      res.status(201).json({
-        _id: existingUser._id,
-        username: existingUser.username,
-        email: existingUser.email,
-        isAdmin: existingUser.isAdmin,
-      });
-      return;
-    } else {
-      res.status(401).send("Something wrong or Password");
-    }
-  } else {
-    res.status(401).send("User not registered");
+  if (!existingUser) {
+    throw new Error("User not registered");
   }
+
+  const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+  if (!isPasswordValid) {
+    throw new Error("Invalid password or email");
+  }
+
+  createToken(res, existingUser._id);
+  res.status(201).json({
+    _id: existingUser._id,
+    username: existingUser.username,
+    email: existingUser.email,
+    isAdmin: existingUser.isAdmin,
+  });
 });
 
 const logoutCurrentUser = asyncHandler(async (req, res) => {
@@ -118,4 +117,10 @@ const updateCurrentuserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { createUser, loginUser, logoutCurrentUser, getCurrentUserProfile, updateCurrentuserProfile };
+export {
+  createUser,
+  loginUser,
+  logoutCurrentUser,
+  getCurrentUserProfile,
+  updateCurrentuserProfile,
+};

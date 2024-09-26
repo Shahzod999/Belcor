@@ -26,8 +26,17 @@ export const ordersApi = createApi({
         body: data
       }),
       invalidatesTags: ["OrderUpdate"],
+    }), 
+    updateOrder: builder.mutation<OrderState, OrderState>({
+      query: (data) => ({
+        url: "/updateOrder",
+        method: "PUT",
+        body: data
+      }),
+      invalidatesTags: ["OrderUpdate"],
     })
   })
 })
 
-export const { useGetAllOrdersQuery, useSendOrderMutation, useGetUserOrdersQuery } = ordersApi
+
+export const { useGetAllOrdersQuery, useSendOrderMutation, useGetUserOrdersQuery, useUpdateOrderMutation } = ordersApi

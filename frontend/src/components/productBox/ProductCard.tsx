@@ -3,17 +3,20 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { addProductToFavorite, removeProductFromFavorite, selectedFavorite } from "../../app/features/favoriteSlice";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { addProductToBasket, removeProductFromBasket, selectedBasket } from "../../app/features/bascketSlice";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Product } from "../../app/types/ProductTypes";
+import { selectedUserInfo } from "../../app/features/userInfoSlice";
+import { toggleSnackBar } from "../../app/features/snackBarSlice";
 
 type ProductCardProps = {
-  product: any;
+  product: Product;
   viewMode?: "single" | "grid" | "basket";
 };
 export interface ReviewState {
@@ -25,14 +28,17 @@ export interface ReviewState {
 }
 
 const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
-  //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
-
+  
+  const navigate = useNavigate()
   const dispatch = useAppDispatch();
   const favorites = useAppSelector(selectedFavorite);
+  //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
   const basket = useAppSelector(selectedBasket);
-
-  const isFavorite = favorites.some((favProd: any) => favProd.id === product.id);
-  const productInBasket = basket.find((basketProd: any) => basketProd.id === product.id);
+  const userInfo = useAppSelector(selectedUserInfo)
+  console.log(!userInfo,'2');
+  
+  const isFavorite = favorites.some((favProd: Product) => favProd.id === product.id);
+  const productInBasket = basket.find((basketProd: Product) => basketProd.id === product.id);
   const [quantity, setQuantity] = useState(productInBasket?.quantity || 1);
 
   const totalPriceProduct = (product.price * quantity).toFixed(2);
@@ -40,8 +46,10 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
   const toggleFavorite = () => {
     if (isFavorite) {
       dispatch(removeProductFromFavorite(product.id));
+      dispatch(toggleSnackBar({ isActive: true, text: "Deleted from favorites!" }))
     } else {
       dispatch(addProductToFavorite(product));
+      dispatch(toggleSnackBar({ isActive: true, text: "Added to favorites!" }))
     }
   };
 
@@ -58,11 +66,16 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
   };
 
   const handleAddToBasket = () => {
+    if(!userInfo){
+      return navigate("/logOut")
+    }
     dispatch(addProductToBasket({ ...product, quantity: quantity, totalPriceProduct }));
+    dispatch(toggleSnackBar({ isActive: true, text: "Added to basket!" }))
   };
 
   const removeFromBasket = () => {
     dispatch(removeProductFromBasket(product));
+    dispatch(toggleSnackBar({ isActive: true, text: "Deleted from basket!" }))
   };
 
   return (
@@ -154,6 +167,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
                     <AddIcon />
                   </IconButton>
                 </Box>
+
 
                 <Button onClick={handleAddToBasket} variant="contained" color="primary">
                   {productInBasket ? "Change Basket" : "Add to Basket"}

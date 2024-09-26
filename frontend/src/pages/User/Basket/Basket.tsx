@@ -1,13 +1,28 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  DialogTitle,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import ProductCard from "../../../components/productBox/ProductCard";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { removeTotalBasket, selectedBasket } from "../../../app/features/bascketSlice";
+import {
+  removeTotalBasket,
+  selectedBasket,
+} from "../../../app/features/bascketSlice";
 import { ChangeEvent, useState } from "react";
 import { selectedUserInfo } from "../../../app/features/userInfoSlice";
-import { useGetUserOrdersQuery, useSendOrderMutation } from "../../../app/api/ordersApi";
+import {
+  useGetUserOrdersQuery,
+  useSendOrderMutation,
+} from "../../../app/api/ordersApi";
 import { BasketState } from "../../../app/types/basketSendOrder";
 import Loader from "../../../components/Loader";
 import WaitingOrders from "../../../components/waitingOrderlist/WaitingOrders";
+import UniversalModal from "../../../components/modal/Modal";
+import { toggleSnackBar } from "../../../app/features/snackBarSlice";
 
 const Basket = () => {
   const dispatch = useAppDispatch();
@@ -16,8 +31,12 @@ const Basket = () => {
   const waitingOrderList = useGetUserOrdersQuery();
   const [open, setOpen] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
-  const totalprice = basket.reduce((acc, curr) => acc + Number(curr.price) * Number(curr.quantity), 0);
-  const [sendOrder, { isLoading: sendingOrderLoading }] = useSendOrderMutation();
+  const totalprice = basket.reduce(
+    (acc, curr) => acc + Number(curr.price) * Number(curr.quantity),
+    0,
+  );
+  const [sendOrder, { isLoading: sendingOrderLoading }] =
+    useSendOrderMutation();
 
   const handleToggalConfirm = () => {
     setOpen(!open);
@@ -26,33 +45,84 @@ const Basket = () => {
   console.log(basket);
 
   const handleConfirmOrder = async () => {
-    let orders: BasketState[] = [];
+    const orders: BasketState[] = [];
+    const orderStatus = {
+      delivered: false,
+      shipped: false,
+      received: true,
+    };
 
     if (!cardNumber) {
-      return alert("Error: Please fill in the required card number.");
+      dispatch(
+        toggleSnackBar({
+          isActive: true,
+          text: "Error: Please fill in the required card number.",
+          error: true,
+        }),
+      );
+      return;
     }
     if (!basket || basket.length === 0) {
       setOpen(false);
-      return alert("Error: Your basket is empty.");
+      dispatch(
+        toggleSnackBar({
+          isActive: true,
+          text: "Error: Your basket is empty.",
+          error: true,
+        }),
+      );
+      return;
     }
 
     if (!userInfo) {
-      return alert("Error User Info");
-    }
-    const endPoint = confirm("Would you like to confirm the order?");
-    if (!endPoint) {
-      return alert("You have canceled the order.");
+      dispatch(
+        toggleSnackBar({
+          isActive: true,
+          text: "Error User Info",
+          error: true,
+        }),
+      );
+      return;
     }
 
     basket.forEach((element) => {
-      const { title, quantity, price, brand, category, stock, availabilityStatus } = element;
-      orders.push({ title, quantity, price, brand, category, stock, availabilityStatus });
+      const {
+        title,
+        quantity,
+        price,
+        brand,
+        category,
+        stock,
+        availabilityStatus,
+      } = element;
+      orders.push({
+        title,
+        quantity,
+        price,
+        brand,
+        category,
+        stock,
+        availabilityStatus,
+      });
     });
 
     try {
-      const res = await sendOrder({ basket: orders, totalprice, cardNumber, userInfo }).unwrap();
+      const res = await sendOrder({
+        basket: orders,
+        totalprice,
+        cardNumber,
+        userInfo,
+        orderStatus,
+      }).unwrap();
+
       dispatch(removeTotalBasket());
-      console.log(res, "Alhamdullilah");
+      dispatch(
+        toggleSnackBar({
+          isActive: true,
+          text: "Order ready :)",
+        }),
+      );
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -62,7 +132,13 @@ const Basket = () => {
   const handleCardNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const number = e.target.value;
     if (!/^\d*$/.test(number)) {
-      alert("Only numbers are allowed for the card number.");
+      dispatch(
+        toggleSnackBar({
+          isActive: true,
+          text: "Only numbers are allowed for the card number.",
+          error: true,
+        }),
+      );
       return;
     }
     setCardNumber(number);
@@ -77,7 +153,15 @@ const Basket = () => {
             <ProductCard product={product} viewMode="basket" />
           </Grid>
         ))}
-        <Box sx={{ mt: 5, mb: 15, display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
+        <Box
+          sx={{
+            mt: 5,
+            mb: 15,
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}>
           <Typography variant="h6" component="div" color="white">
             Total Price: ${totalprice.toFixed(2)}
           </Typography>
@@ -88,24 +172,33 @@ const Basket = () => {
         </Box>
       </Grid>
 
-      <Dialog open={open} onClose={handleToggalConfirm}>
+      <UniversalModal
+        open={open}
+        onClose={handleToggalConfirm}
+        onConfirm={handleConfirmOrder}
+        title="Are u agree to continue"
+        isLoading={sendingOrderLoading}>
         <DialogTitle>Confirm Order</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" gutterBottom>
-            Total Price: ${totalprice.toFixed(2)}
-          </Typography>
-          <TextField autoFocus margin="dense" label="Card Number" type="text" fullWidth variant="outlined" value={cardNumber} onChange={handleCardNumber} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleToggalConfirm} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmOrder} variant="contained" color="primary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <WaitingOrders data={waitingOrderList.data} isError={waitingOrderList.isError} isLoading={waitingOrderList.isLoading} />
+        <Typography variant="body1" gutterBottom>
+          Total Price: ${totalprice.toFixed(2)}
+        </Typography>
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Card Number"
+          type="text"
+          fullWidth
+          variant="outlined"
+          value={cardNumber}
+          onChange={handleCardNumber}
+        />
+      </UniversalModal>
+
+      <WaitingOrders
+        data={waitingOrderList.data}
+        isError={waitingOrderList.isError}
+        isLoading={waitingOrderList.isLoading}
+      />
     </>
   );
 };

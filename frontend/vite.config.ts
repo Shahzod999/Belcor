@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/belcor/": "http://localhost:5000"
+      "/belcor/": "http://localhost:5001"
     }
   }
 })

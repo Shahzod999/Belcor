@@ -1,12 +1,12 @@
 import { USER_URL } from './../constants';
 import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
-import { BASE_URL } from "../constants";
-import { UserState } from "../types/UserTypes";
+import { ErrorState, UserState } from "../types/UserTypes";
 
 interface DataState {
   username: string,
   email: string,
   password: string
+  _id?: string
 }
 
 interface LogoutResponse {
@@ -18,7 +18,7 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: USER_URL }),
   tagTypes: ["UserProfile"],
   endpoints: (builder) => ({
-    registerUser: builder.mutation<UserState, DataState>({
+    registerUser: builder.mutation<UserState, DataState | ErrorState>({
       query: (data) => ({
         url: "",
         method: "POST",
@@ -26,7 +26,7 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["UserProfile"],
     }),
-    loginUser: builder.mutation<UserState, DataState>({
+    loginUser: builder.mutation<UserState, DataState | ErrorState>({
       query: (data) => ({
         url: "/auth",
         method: "POST",

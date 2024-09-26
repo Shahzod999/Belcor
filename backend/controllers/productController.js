@@ -41,4 +41,21 @@ const addProductToOrder = asyncHandler(async (req, res) => {
   }
 });
 
-export { fetchAllProducts, addProductToOrder, fetchAllProductsForUser };
+const updateStatusOrder = asyncHandler(async(req, res) =>{
+  const { _id, orderStatus } = req.body;
+
+  const product = await Order.findById(_id);
+
+  if (!product) {
+    return res.status(404).json({ message: 'Order not found' }); // Обработка ошибки, если заказ не найден
+  }
+  product.orderStatus = {
+    ...product.orderStatus,
+    ...orderStatus,
+  };
+
+  const updatedProduct = await product.save();
+  res.json(updatedProduct);
+})
+
+export { fetchAllProducts, addProductToOrder, fetchAllProductsForUser, updateStatusOrder };

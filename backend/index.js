@@ -8,7 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import cors from "cors";
 dotenv.config();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 connectDB();
 

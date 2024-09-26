@@ -29,7 +29,9 @@ const Profile = () => {
   } = useForm<Inputs>();
   const password = watch("password");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: Inputs) => {
+    console.log(data,'profile');
+    
     try {
       const res = await updateUserProfile({ _id: userInfo?._id, ...data }).unwrap();
       dispatch(userInfoHolder({ ...res }));

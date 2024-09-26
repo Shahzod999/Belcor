@@ -55,6 +55,12 @@ const userInfoSchema = new mongoose.Schema({
   },
 });
 
+const orderStateSchema = new mongoose.Schema({
+  delivered: { type: Boolean, default: true, required: true },
+  shipped: { type: Boolean, default: false, required: true },
+  received: { type: Boolean, default: false, required: true },
+});
+
 // схема Order
 const orderSchema = new mongoose.Schema(
   {
@@ -74,10 +80,14 @@ const orderSchema = new mongoose.Schema(
       type: userInfoSchema,
       required: true,
     },
+    orderStatus: {
+      type: orderStateSchema,
+      required: true
+    }
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Order = mongoose.model("Order", orderSchema);
