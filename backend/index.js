@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import cors from "cors";
 dotenv.config();
 
+const frontendURL = process.env.FRONTEND_URL;
 const port = process.env.PORT || 5001;
 
 connectDB();
@@ -16,7 +17,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: frontendURL,
     credentials: true,
   })
 ); // снова забыл
