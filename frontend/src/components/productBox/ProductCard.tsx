@@ -28,15 +28,14 @@ export interface ReviewState {
 }
 
 const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
-  
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const favorites = useAppSelector(selectedFavorite);
   //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
   const basket = useAppSelector(selectedBasket);
-  const userInfo = useAppSelector(selectedUserInfo)
-  console.log(!userInfo,'2');
-  
+  const userInfo = useAppSelector(selectedUserInfo);
+  console.log(!userInfo, "2");
+
   const isFavorite = favorites.some((favProd: Product) => favProd.id === product.id);
   const productInBasket = basket.find((basketProd: Product) => basketProd.id === product.id);
   const [quantity, setQuantity] = useState(productInBasket?.quantity || 1);
@@ -46,36 +45,36 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
   const toggleFavorite = () => {
     if (isFavorite) {
       dispatch(removeProductFromFavorite(product.id));
-      dispatch(toggleSnackBar({ isActive: true, text: "Deleted from favorites!" }))
+      dispatch(toggleSnackBar({ isActive: true, text: "Deleted from favorites!" }));
     } else {
       dispatch(addProductToFavorite(product));
-      dispatch(toggleSnackBar({ isActive: true, text: "Added to favorites!" }))
+      dispatch(toggleSnackBar({ isActive: true, text: "Added to favorites!" }));
     }
   };
 
   const handleQuantity = (method: string) => {
     switch (method) {
       case "+":
-        setQuantity((prev) => prev + 1);
+        setQuantity((prev) => Math.min(prev + 1, product.stock));
         break;
       case "-":
         // пауза тут исправить минус вычитание
-        setQuantity((prev) => Math.max(prev - 1, 0));
+        setQuantity((prev) => Math.max(prev - 1, 1));
         break;
     }
   };
 
   const handleAddToBasket = () => {
-    if(!userInfo){
-      return navigate("/logOut")
+    if (!userInfo) {
+      return navigate("/logOut");
     }
     dispatch(addProductToBasket({ ...product, quantity: quantity, totalPriceProduct }));
-    dispatch(toggleSnackBar({ isActive: true, text: "Added to basket!" }))
+    dispatch(toggleSnackBar({ isActive: true, text: "Added to basket!" }));
   };
 
   const removeFromBasket = () => {
     dispatch(removeProductFromBasket(product));
-    dispatch(toggleSnackBar({ isActive: true, text: "Deleted from basket!" }))
+    dispatch(toggleSnackBar({ isActive: true, text: "Deleted from basket!" }));
   };
 
   return (
@@ -94,7 +93,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
       </Box>
 
       <Grid container>
-        {/* Изображение продукта */}
         <Grid item md={viewMode === "single" ? 6 : 12}>
           <CardMedia
             component="img"
@@ -109,7 +107,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
           />
         </Grid>
 
-        {/* Описание продукта */}
         <Grid item md={viewMode === "single" ? 6 : 12}>
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
@@ -134,7 +131,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
 
             <Rating value={product.rating} readOnly precision={0.1} />
 
-            {/* Дополнительная информация только для страницы одного продукта */}
             {viewMode === "single" && (
               <>
                 <Box mt={2}>
@@ -145,6 +141,7 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
                     Dimensions: {product.dimensions.width} x {product.dimensions.height} x {product.dimensions.depth} cm
                   </Typography>
                   <Typography variant="body2">Warranty: {product.warrantyInformation}</Typography>
+                  <Typography variant="body2">In stock: {product.stock}</Typography>
                 </Box>
 
                 <Box mt={2}>
@@ -167,7 +164,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
                     <AddIcon />
                   </IconButton>
                 </Box>
-
 
                 <Button onClick={handleAddToBasket} variant="contained" color="primary">
                   {productInBasket ? "Change Basket" : "Add to Basket"}
@@ -200,7 +196,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
               </>
             )}
 
-            {/* Ссылка на продукт в режиме "grid" */}
             {(viewMode === "grid" || viewMode === "basket") && (
               <Button component={Link} to={`/${product.id}`} variant="contained" color="primary" sx={{ mt: 2 }}>
                 View Details
@@ -210,7 +205,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
         </Grid>
       </Grid>
 
-      {/* Отзывы только для страницы одного продукта */}
       {viewMode === "single" && (
         <Box mt={4}>
           <Typography variant="h5" gutterBottom>
