@@ -18,6 +18,7 @@ const app = express();
 app.use(
   cors({
     origin: frontendURL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 ); // снова забыл
