@@ -47,7 +47,7 @@ const updateStatusOrder = asyncHandler(async(req, res) =>{
   const product = await Order.findById(_id);
 
   if (!product) {
-    return res.status(404).json({ message: 'Order not found' }); // Обработка ошибки, если заказ не найден
+    return res.status(404).json({ message: 'Order not found' }); 
   }
   product.orderStatus = {
     ...product.orderStatus,

@@ -50,6 +50,7 @@ const Auth = () => {
       const res = await registerUser(data).unwrap();
       dispatch(userInfoHolder(res));
       navigate("/profile");
+      console.clear()
     } catch (err: unknown) {
       const errorMessage =
         (err as ErrorState)?.data?.message || "An unknown error occurred";
@@ -62,6 +63,7 @@ const Auth = () => {
       const res = await loginUser(data).unwrap();
       dispatch(userInfoHolder(res));
       navigate("/profile");
+      console.clear()
     } catch (err: unknown) {
       const errorMessage =
         (err as ErrorState)?.data?.message || "An unknown error occurred";

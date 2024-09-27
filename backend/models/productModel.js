@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Schema для корзины
 const basketItemSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -34,7 +33,6 @@ const basketItemSchema = new mongoose.Schema({
   },
 });
 
-// Schema для информации о userInfo
 const userInfoSchema = new mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -61,7 +59,6 @@ const orderStateSchema = new mongoose.Schema({
   received: { type: Boolean, default: false, required: true },
 });
 
-// схема Order
 const orderSchema = new mongoose.Schema(
   {
     basket: {

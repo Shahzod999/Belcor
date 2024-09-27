@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 
 export default function PaginationRounded({ total, handlePagination }: { total: number | undefined; handlePagination: (page: number) => void }) {
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    handlePagination(value - 1); // Вызываем переданную функцию при изменении страницы
+    handlePagination(value - 1); 
   };
   return (
     <Stack spacing={2}>

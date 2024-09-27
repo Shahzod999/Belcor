@@ -13,10 +13,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^6.1.1",
-    "@mui/material": "^6.1.1",
     "bcryptjs": "^2.4.3",
     "concurrently": "^9.0.1",
     "cookie-parser": "^1.4.6",

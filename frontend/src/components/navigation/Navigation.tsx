@@ -16,8 +16,7 @@ import { useGetProfileUserQuery } from "../../app/api/userApi";
 import Loader from "../Loader";
 
 const Navigation = () => {
-  // const userInfo = useAppSelector(selectedUserInfo);
-  const { data: userInfo, error, isLoading } = useGetProfileUserQuery();
+  const { data: userInfo, isLoading } = useGetProfileUserQuery();
   const [dropDown, setDropDown] = useState(false);
   return (
     <AppBar sx={{ backgroundColor: "#141414" }}>

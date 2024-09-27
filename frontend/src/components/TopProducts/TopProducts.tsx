@@ -15,8 +15,6 @@ const TopProducts = () => {
   if (isLoading) {
     return <CircularProgress />;
   }
-
-  // Показать сообщение об ошибке, если что-то пошло не так
   if (isError) {
     return (
       <Typography variant="h6" color="error">
