@@ -11,6 +11,16 @@ import ProductCard from "../../components/productBox/ProductCard";
 import { useState } from "react";
 import PaginationRounded from "../../components/Pagination/PaginationRounded";
 import Filter from "../../components/filterProducts/Filter";
+import { BASE_DUMMY_URL, BASE_URL, ORDERS_URL, USER_URL } from "../../app/constants";
+
+
+
+console.log("USER_URL:", USER_URL);
+console.log("BASE_URL:", BASE_URL);
+console.log("BASE_DUMMY_URL:", BASE_DUMMY_URL);
+console.log("ORDERS_URL:", ORDERS_URL);
+
+
 
 const Home = () => {
   const { data: categoryList } = useGetAllCategoryListQuery();
