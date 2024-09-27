@@ -27,7 +27,7 @@ const basketItemSchema = new mongoose.Schema({
   stock: {
     type: Number,
     required: true,
-    default: "zero",
+    default: 1,
   },
   availabilityStatus: {
     type: String,
