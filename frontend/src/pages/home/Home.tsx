@@ -1,8 +1,5 @@
 import { Container, Grid, SelectChangeEvent } from "@mui/material";
-import {
-  useGetAllCategoryListQuery,
-  useGetAllProductsQuery,
-} from "../../app/api/dataFromDummy";
+import { useGetAllCategoryListQuery, useGetAllProductsQuery } from "../../app/api/dataFromDummy";
 import Error from "../../components/Error";
 import Loader from "../../components/Loader";
 import TopProducts from "../../components/TopProducts/TopProducts";
@@ -11,16 +8,6 @@ import ProductCard from "../../components/productBox/ProductCard";
 import { useState } from "react";
 import PaginationRounded from "../../components/Pagination/PaginationRounded";
 import Filter from "../../components/filterProducts/Filter";
-import { BASE_DUMMY_URL, BASE_URL, ORDERS_URL, USER_URL } from "../../app/constants";
-
-
-
-console.log("USER_URL:", USER_URL);
-console.log("BASE_URL:", BASE_URL);
-console.log("BASE_DUMMY_URL:", BASE_DUMMY_URL);
-console.log("ORDERS_URL:", ORDERS_URL);
-
-
 
 const Home = () => {
   const { data: categoryList } = useGetAllCategoryListQuery();
@@ -43,38 +30,36 @@ const Home = () => {
     order: filters.price || filters.name || "",
   });
 
-  const handleFilterChange =
-    (type: string) => (event: SelectChangeEvent<string>) => {
-      setFilters((prev) => {
-        if (type == "price") {
-          return {
-            ...prev,
-            price: event.target.value,
-            name: "",
-          };
-        } else if (type == "name") {
-          return {
-            ...prev,
-            price: "",
-            name: event.target.value,
-          };
-        } else {
-          return {
-            ...filters,
-            [type]: event.target.value,
-          };
-        }
-      });
-    };
+  const handleFilterChange = (type: string) => (event: SelectChangeEvent<string>) => {
+    setFilters((prev) => {
+      if (type == "price") {
+        return {
+          ...prev,
+          price: event.target.value,
+          name: "",
+        };
+      } else if (type == "name") {
+        return {
+          ...prev,
+          price: "",
+          name: event.target.value,
+        };
+      } else {
+        return {
+          ...filters,
+          [type]: event.target.value,
+        };
+      }
+    });
+  };
 
-  const handlePageFilter =
-    (type: string) => (event: SelectChangeEvent<string>) => {
-      setPageFilter({
-        price: "",
-        name: "",
-        [type]: event.target.value,
-      });
-    };
+  const handlePageFilter = (type: string) => (event: SelectChangeEvent<string>) => {
+    setPageFilter({
+      price: "",
+      name: "",
+      [type]: event.target.value,
+    });
+  };
 
   const handlePagination = (page: number) => {
     setPagePagination(page * 20);
@@ -108,13 +93,7 @@ const Home = () => {
     <Container sx={{ position: "relative" }}>
       <TopProducts />
 
-      <Filter
-        categoryList={categoryList || []}
-        filters={filters}
-        pageFilter={pageFilter}
-        onFilterChange={handleFilterChange}
-        onPageFilterChange={handlePageFilter}
-      />
+      <Filter categoryList={categoryList || []} filters={filters} pageFilter={pageFilter} onFilterChange={handleFilterChange} onPageFilterChange={handlePageFilter} />
 
       {/* пауза тут */}
 
