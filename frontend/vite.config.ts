@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/belcor': {
-          target: env.VITE_PROXY_URL || "http://localhost:5001",
+          target: "https://belcor-seven.vercel.app" || "http://localhost:5001",
           changeOrigin: true, 
         }
       }
