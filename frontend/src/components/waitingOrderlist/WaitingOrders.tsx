@@ -9,15 +9,12 @@ type OrderStatus = "received" | "shipped" | "delivered" | "";
 
 const WaitingOrders = ({ data: waitingOrderList, isLoading }: WaitingOrdersProps) => {
   const [status, setStatus] = useState<OrderStatus>("");
-  
 
   if (isLoading) {
     return <Loader />;
   }
 
   console.log(waitingOrderList);
-  
-
 
   const statusFilters = ["received", "shipped", "delivered"];
 
@@ -26,9 +23,8 @@ const WaitingOrders = ({ data: waitingOrderList, isLoading }: WaitingOrdersProps
   };
 
   console.log(status);
-  
-  const filteredOrderList = status ? waitingOrderList?.filter(order => order.orderStatus[status]) : waitingOrderList;
 
+  const filteredOrderList = status ? waitingOrderList?.filter((order) => order.orderStatus[status]) : waitingOrderList;
 
   return (
     <TableContainer component={Paper}>
@@ -36,11 +32,7 @@ const WaitingOrders = ({ data: waitingOrderList, isLoading }: WaitingOrdersProps
         Waiting Orders
       </Typography>
 
-      <OrderFilter
-        statusFilters={statusFilters}
-        status={status}
-        onStatusChange={handleStatusChange}
-      />
+      <OrderFilter statusFilters={statusFilters} status={status} onStatusChange={handleStatusChange} />
 
       <Table>
         <TableHead>
@@ -58,7 +50,7 @@ const WaitingOrders = ({ data: waitingOrderList, isLoading }: WaitingOrdersProps
         <TableBody>
           {filteredOrderList?.map((order) => (
             <React.Fragment key={order._id}>
-              <TableRow >
+              <TableRow>
                 <TableCell>{order._id}</TableCell>
                 <TableCell>
                   {order.basket.map((item) => (
@@ -80,13 +72,11 @@ const WaitingOrders = ({ data: waitingOrderList, isLoading }: WaitingOrdersProps
                 <TableCell align="center">{order.userInfo.username}</TableCell>
                 <TableCell align="center">{order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"}</TableCell>
               </TableRow>
-              <TableRow >
-                <RenderStatusIndicator status={order.orderStatus} product={order}/>
+              <TableRow>
+                <RenderStatusIndicator status={order.orderStatus} product={order} />
               </TableRow>
             </React.Fragment>
-
           ))}
-
         </TableBody>
       </Table>
     </TableContainer>
