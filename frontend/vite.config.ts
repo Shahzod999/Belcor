@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
-        [env.VITE_BASE_URL]: {
+        '/belcor': {
           target: env.VITE_PROXY_URL || "http://localhost:5001",
           changeOrigin: true, 
         }
