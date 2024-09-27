@@ -17,14 +17,17 @@ const basketItemSchema = new mongoose.Schema({
   brand: {
     type: String,
     required: true,
+    default: "noBrand",
   },
   category: {
     type: String,
     required: true,
+    default: "noCategory",
   },
   stock: {
     type: Number,
     required: true,
+    default: "zero",
   },
   availabilityStatus: {
     type: String,
@@ -79,12 +82,12 @@ const orderSchema = new mongoose.Schema(
     },
     orderStatus: {
       type: orderStateSchema,
-      required: true
-    }
+      required: true,
+    },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 const Order = mongoose.model("Order", orderSchema);
