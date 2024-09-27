@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/belcor/": "https://belcor-seven.vercel.app" || "http://localhost:5001",
+      "/belcor/": "https://belcor-seven.vercel.app"
     }
   }
 })
