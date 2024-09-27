@@ -9,6 +9,7 @@ import cors from "cors";
 dotenv.config();
 
 const frontendURL = process.env.FRONTEND_URL;
+console.log(frontendURL);
 const port = process.env.PORT || 5001;
 
 connectDB();
