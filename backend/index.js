@@ -14,7 +14,12 @@ connectDB();
 
 const app = express();
 
-// app.use(cors()); // снова забыл
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+); // снова забыл
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
