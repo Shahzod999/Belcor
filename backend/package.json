@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm run frontend\" \"npm run backend\""
   },
   "keywords": [],
-  "author": "",
+  "author": "shahzod",
   "license": "ISC",
   "description": "",
   "dependencies": {
