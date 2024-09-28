@@ -8,8 +8,11 @@ import ProductCard from "../../components/productBox/ProductCard";
 import { useState } from "react";
 import PaginationRounded from "../../components/Pagination/PaginationRounded";
 import Filter from "../../components/filterProducts/Filter";
+import { useAppSelector } from "../../app/hooks";
+import { selectedSearchParam } from "../../app/features/searchSlice";
 
 const Home = () => {
+  const searchParam = useAppSelector(selectedSearchParam);
   const { data: categoryList } = useGetAllCategoryListQuery();
   const [pagePagination, setPagePagination] = useState(0);
   const [filters, setFilters] = useState({
@@ -28,6 +31,7 @@ const Home = () => {
     filter: filters.category ? `${filters.category}` : "",
     sortBy: filters.price ? "price" : filters.name ? "title" : "",
     order: filters.price || filters.name || "",
+    search: searchParam,
   });
 
   const handleFilterChange = (type: string) => (event: SelectChangeEvent<string>) => {
@@ -74,6 +78,11 @@ const Home = () => {
   }
 
   const { products = [], total } = data || {};
+  let setTotal;
+
+  if (total) {
+    setTotal = Math.round(total / 20);
+  }
 
   const totalFilteredProducts = [...products].sort((a, b) => {
     if (pageFilter.price == "asc") {
@@ -95,8 +104,6 @@ const Home = () => {
 
       <Filter categoryList={categoryList || []} filters={filters} pageFilter={pageFilter} onFilterChange={handleFilterChange} onPageFilterChange={handlePageFilter} />
 
-      {/* пауза тут */}
-
       <Grid container spacing={2} mt={1}>
         {totalFilteredProducts.map((product) => (
           <Grid item key={product.id} xs={12} sm={6} md={4}>
@@ -105,7 +112,7 @@ const Home = () => {
         ))}
       </Grid>
 
-      <PaginationRounded total={total} handlePagination={handlePagination} />
+      <PaginationRounded total={setTotal} handlePagination={handlePagination} />
     </Container>
   );
 };

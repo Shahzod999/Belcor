@@ -8,15 +8,18 @@ import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import { AppBar, Container, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useGetProfileUserQuery } from "../../app/api/userApi";
 import Loader from "../Loader";
 import "./navigation.scss";
+import SearchBar from "./SearchBar";
 
 const Navigation = () => {
   const { data: userInfo, isLoading } = useGetProfileUserQuery();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const open = Boolean(anchorEl);
 
   const toggleDrawer = (open: boolean) => {
@@ -32,7 +35,7 @@ const Navigation = () => {
   };
 
   return (
-    <AppBar sx={{ backgroundColor: "#141414" }}>
+    <AppBar sx={{ backgroundColor: "#141414" }} position="relative">
       <Container>
         <nav className="header__navigation">
           <Link to="/">
@@ -40,6 +43,8 @@ const Navigation = () => {
               BELCOR
             </Typography>
           </Link>
+
+          <SearchBar />
 
           <List className="desktop-nav">
             <ListItem>

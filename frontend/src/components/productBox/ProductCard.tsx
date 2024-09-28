@@ -34,7 +34,6 @@ const ProductCard = ({ product, viewMode = "single" }: ProductCardProps) => {
   //в принципе чтобы добавлять к favorites я бы отправил PUT запрос на сервер и добавил бы в обьект ключ пару favorites: true
   const basket = useAppSelector(selectedBasket);
   const userInfo = useAppSelector(selectedUserInfo);
-  console.log(!userInfo, "2");
 
   const isFavorite = favorites.some((favProd: Product) => favProd.id === product.id);
   const productInBasket = basket.find((basketProd: Product) => basketProd.id === product.id);

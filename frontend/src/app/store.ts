@@ -7,6 +7,7 @@ import favoriteSlice from "./features/favoriteSlice";
 import bascketSlice from "./features/bascketSlice";
 import { ordersApi } from "./api/ordersApi";
 import snackBarSlice from "./features/snackBarSlice";
+import searchSlice from "./features/searchSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     favorite: favoriteSlice,
     basket: bascketSlice,
     mySnackBar: snackBarSlice,
+    search: searchSlice,
     [productsApi.reducerPath]: productsApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [ordersApi.reducerPath]: ordersApi.reducer,
