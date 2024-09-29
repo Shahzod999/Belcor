@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -16,6 +16,7 @@ import "./navigation.scss";
 import SearchBar from "./SearchBar";
 
 const Navigation = () => {
+  const { pathname } = useLocation();
   const { data: userInfo, isLoading } = useGetProfileUserQuery();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -44,8 +45,7 @@ const Navigation = () => {
             </Typography>
           </Link>
 
-          <SearchBar />
-
+          {pathname == "/" && <SearchBar />}
           <List className="desktop-nav">
             <ListItem>
               <Link to="/" data-text="Home">
