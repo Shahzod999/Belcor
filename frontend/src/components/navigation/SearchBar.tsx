@@ -12,7 +12,7 @@ const SearchBar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const boxStyles = (searchOpen: boolean) => ({
-    display: searchOpen ? "flex" : "block",
+    display: "flex",
     justifyContent: searchOpen ? "space-between" : "initial",
     alignItems: searchOpen ? "center" : "initial",
     borderRadius: searchOpen ? 10 : "initial",

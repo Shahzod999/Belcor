@@ -19,7 +19,9 @@ body {
 html {
   scroll-behavior: smooth;
 }
-
+main {
+  margin-top: 100px;
+}
 ::-webkit-scrollbar {
   background-color: black;
   width: 5px;

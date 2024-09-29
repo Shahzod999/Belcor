@@ -36,7 +36,7 @@ const Navigation = () => {
   };
 
   return (
-    <AppBar sx={{ backgroundColor: "#141414" }} position="relative">
+    <AppBar sx={{ backgroundColor: "#141414" }} position="fixed">
       <Container>
         <nav className="header__navigation">
           <Link to="/">
@@ -92,7 +92,7 @@ const Navigation = () => {
             </ListItem>
           </List>
 
-          <IconButton edge="end" color="inherit" aria-label="menu" onClick={() => toggleDrawer(true)} className="mobile-menu-button">
+          <IconButton edge="end" color="inherit" aria-label="menu" onClick={() => toggleDrawer(true)} className="mobile-menu-button" sx={{ padding: 3 }}>
             <MenuIcon />
           </IconButton>
           <Drawer anchor="right" open={drawerOpen} onClose={() => toggleDrawer(false)}>
