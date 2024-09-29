@@ -17,13 +17,13 @@ export const productsApi = createApi({
         if (filter) {
           search = "";
         }
+        if (sortBy) queryParams.append("sortBy", sortBy);
+        if (order) queryParams.append("order", order);
         if (search) {
           queryParams.append("q", search);
           console.log(`/products/search?${queryParams.toString()}`, 'url');
           return `/products/search?${queryParams.toString()}`
         }
-        if (sortBy) queryParams.append("sortBy", sortBy);
-        if (order) queryParams.append("order", order);
         const filterPath = filter ? `/category/${filter}` : ""
         return `/products${filterPath}?${queryParams.toString()}`
       }

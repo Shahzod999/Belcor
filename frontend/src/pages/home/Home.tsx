@@ -1,4 +1,4 @@
-import { Container, Grid, SelectChangeEvent } from "@mui/material";
+import { Box, Container, Grid, SelectChangeEvent } from "@mui/material";
 import { useGetAllCategoryListQuery, useGetAllProductsQuery } from "../../app/api/dataFromDummy";
 import Error from "../../components/Error";
 import Loader from "../../components/Loader";
@@ -25,7 +25,7 @@ const Home = () => {
     name: "",
   });
 
-  const { data, error, isLoading } = useGetAllProductsQuery({
+  const { data, error, isLoading, isFetching } = useGetAllProductsQuery({
     limit: 20,
     skip: pagePagination,
     filter: filters.category ? `${filters.category}` : "",
@@ -98,6 +98,7 @@ const Home = () => {
     }
   });
 
+  console.log(isFetching);
   return (
     <Container sx={{ position: "relative" }}>
       <TopProducts />
@@ -105,6 +106,11 @@ const Home = () => {
       <Filter categoryList={categoryList || []} filters={filters} pageFilter={pageFilter} onFilterChange={handleFilterChange} onPageFilterChange={handlePageFilter} />
 
       <Grid container spacing={2} mt={1}>
+        {isFetching && (
+          <Box sx={{ zIndex: 999, top: 0, left: 0, bottom: 0, right: 0, display: "flex", justifyContent: "center", alignItems: "center" }} position={"fixed"}>
+            <Loader />
+          </Box>
+        )}
         {totalFilteredProducts.map((product) => (
           <Grid item key={product.id} xs={12} sm={6} md={4}>
             <ProductCard product={product} viewMode="grid" />
