@@ -1,6 +1,6 @@
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/hooks";
 import { selectedValueSnackBar, toggleSnackBar } from "../../app/features/snackBarSlice";
 
 const MySnackbar = () => {

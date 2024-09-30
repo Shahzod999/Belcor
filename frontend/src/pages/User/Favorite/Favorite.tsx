@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { selectedFavorite } from "../../../app/features/favoriteSlice";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../app/hooks/hooks";
 import ProductCard from "../../../components/productBox/ProductCard";
 
 const Favorite = () => {

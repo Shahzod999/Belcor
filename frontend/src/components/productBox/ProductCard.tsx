@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/hooks";
 import { addProductToFavorite, removeProductFromFavorite, selectedFavorite } from "../../app/features/favoriteSlice";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";

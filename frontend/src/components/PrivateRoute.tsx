@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../app/hooks/hooks";
 import { selectedUserInfo } from "../app/features/userInfoSlice";
 import { Container } from "@mui/material";
 

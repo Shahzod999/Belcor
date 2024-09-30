@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { selectedUserInfo } from "../../app/features/userInfoSlice";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks/hooks";
 import LockIcon from "@mui/icons-material/Lock";
 import { useGetAllOrdersQuery } from "../../app/api/ordersApi";
 import WaitingOrders from "../../components/waitingOrderlist/WaitingOrders";

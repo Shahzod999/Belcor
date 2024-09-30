@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import ProductCard from "../../../components/productBox/ProductCard";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks/hooks";
 import {
   removeTotalBasket,
   selectedBasket,

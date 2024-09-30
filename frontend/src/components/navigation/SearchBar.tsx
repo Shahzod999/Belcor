@@ -1,15 +1,26 @@
 import SearchIcon from "@mui/icons-material/Search";
 import ScubaDivingIcon from "@mui/icons-material/ScubaDiving";
 import { Box, Button, Input } from "@mui/material";
-import { useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useEffect, useState } from "react";
 import { searchParams } from "../../app/features/searchSlice";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "../../app/hooks/hooks";
+import useDebounce from "../../app/hooks/debounce";
 
 const SearchBar = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, watch } = useForm();
   const dispatch = useAppDispatch();
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const searchParam = watch("searchParam");
+
+  const debouncedSearchParam = useDebounce(searchParam, 900);
+
+  useEffect(() => {
+    if (debouncedSearchParam) {
+      dispatch(searchParams(debouncedSearchParam));
+    }
+  }, [debouncedSearchParam, dispatch]);
 
   const boxStyles = (searchOpen: boolean) => ({
     display: "flex",
@@ -26,13 +37,13 @@ const SearchBar = () => {
     right: searchOpen ? 0 : "initial",
   });
 
-  const handleSearchParam = (data: any) => {
-    dispatch(searchParams(data.searchParam));
+  const handleSearchParam = (e: React.FormEvent) => {
+    e.preventDefault();
     setSearchOpen(false);
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSearchParam)}>
+    <form onSubmit={handleSearchParam}>
       <Box sx={boxStyles(searchOpen)}>
         <SearchIcon onClick={() => setSearchOpen(true)} style={{ color: searchOpen ? "black" : "white" }} />
         <Input {...register("searchParam")} placeholder="Type something…" sx={{ display: searchOpen ? "block" : "none", border: "red" }} fullWidth />

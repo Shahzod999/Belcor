@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useUpdateUserProfileMutation } from "../../app/api/userApi";
 import { selectedUserInfo, userInfoHolder } from "../../app/features/userInfoSlice";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/hooks";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Box, Button, FormControl, FormHelperText, Input, InputAdornment, InputLabel, Paper, Typography } from "@mui/material";

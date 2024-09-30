@@ -6,7 +6,7 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
 import "./auth.scss";
 import { useLogOutUserMutation, useLoginUserMutation, useRegisterUserMutation } from "../../app/api/userApi";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks/hooks";
 import { logout, userInfoHolder } from "../../app/features/userInfoSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";

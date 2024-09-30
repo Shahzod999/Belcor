@@ -8,7 +8,7 @@ import ProductCard from "../../components/productBox/ProductCard";
 import { useState } from "react";
 import PaginationRounded from "../../components/Pagination/PaginationRounded";
 import Filter from "../../components/filterProducts/Filter";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks/hooks";
 import { selectedSearchParam } from "../../app/features/searchSlice";
 
 const Home = () => {
@@ -98,7 +98,6 @@ const Home = () => {
     }
   });
 
-  console.log(isFetching);
   return (
     <Container sx={{ position: "relative" }}>
       <TopProducts />

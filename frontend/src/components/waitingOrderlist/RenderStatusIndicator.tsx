@@ -1,6 +1,6 @@
 import { Typography, TableCell } from "@mui/material";
 import { OrderState, OrderStatusState } from "../../app/types/basketSendOrder";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks/hooks";
 import { selectedUserInfo } from "../../app/features/userInfoSlice";
 import { useState } from "react";
 import { useUpdateOrderMutation } from "../../app/api/ordersApi";
