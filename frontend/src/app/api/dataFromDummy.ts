@@ -2,6 +2,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_DUMMY_URL } from "../constants";
 import { Product, ProductsResponse } from "../types/ProductTypes";
 
+interface QueryParams {
+  limit: string;
+  skip: string;
+  sortBy?: string;
+  order?: string;
+  q?: string;
+}
 
 export const productsApi = createApi({
   reducerPath: "products",
@@ -9,24 +16,30 @@ export const productsApi = createApi({
   endpoints: (builder) => ({
     getAllProducts: builder.query<ProductsResponse, { limit?: number, skip?: number, filter?: string, sortBy?: string, order?: string, search?: string }>({
       query: ({ limit = 30, skip = 0, filter = "", sortBy = "", order = "", search = "" }) => {
-        const queryParams = new URLSearchParams({
+        const queryParams: QueryParams = {
           limit: limit.toString(),
           skip: skip.toString(),
-        })
+        };
 
+        if (sortBy) queryParams.sortBy = sortBy;
+        if (order) queryParams.order = order;
+
+        if (search) {
+          queryParams.q = search;
+          return {
+            url: `/products/search`,
+            params: queryParams,
+          };
+        }
         if (filter) {
           search = "";
         }
-        if (sortBy) queryParams.append("sortBy", sortBy);
-        if (order) queryParams.append("order", order);
-        if (search) {
-          queryParams.append("q", search);
-          console.log(`/products/search?${queryParams.toString()}`, 'url');
-          return `/products/search?${queryParams.toString()}`
-        }
-        const filterPath = filter ? `/category/${filter}` : ""
-        return `/products${filterPath}?${queryParams.toString()}`
-      }
+        const filterPath = filter ? `/category/${filter}` : "";
+        return {
+          url: `/products${filterPath}`,
+          params: queryParams,
+        };
+      },
     }),
     getHightRaiting: builder.query<ProductsResponse, void>({
       query: () => '/products?limit=11&sortBy=rating&order=desc'
